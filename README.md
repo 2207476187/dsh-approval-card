@@ -11,6 +11,7 @@ DeepSeek Harness 的审批卡一直是「一张卡只有一个短路径」——
 
 ```
 plugin/          插件本体（Cordis 服务端 + 浏览器端 client.js + 单元测试）
+                 独立仓库：https://github.com/2207476187/dsh-approval-card-plugin
 tools/           patch-approval-gate.mjs：审批门路径截断补丁（幂等，可 --status/--dry-run）
 docs/adr/        两个决策记录：为什么写插件、为什么打补丁而不是关开关
 docs/devlog/     过程记录：怎么定位到审批门、多帧 zstd 取证、每一轮修了什么
@@ -18,6 +19,19 @@ docs/            upstream-issue-*.md：可直接提交给上游的 bug 报告（
 probes/          取证脚本：回放历史会话、检查入口行为、复现审批门截断
 logs/            原始报错（文档里按 路径:行号 引用）
 ```
+
+## 两个仓库
+
+- **`dsh-approval-card-plugin`** —— 插件源码，仓库根目录就是包根（`package.json` / `src/` / `client.js` / `locale/`），可以直接当插件仓库装；
+- **本仓库** —— 插件快照 + 补丁脚本 + 取证与文档。`plugin/` 是同一份源码的副本。
+
+同步方式（改完插件后）：
+
+```powershell
+robocopy plugin .build\plugin-repo /MIR /XD .git
+cd .build\plugin-repo; git add -A; git commit -m "feat: …"; git push
+```
+
 
 ## 插件做了什么
 
