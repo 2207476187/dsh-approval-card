@@ -1,5 +1,5 @@
-const DSH = (process.env.DSH_HOME ?? `${(process.env.USERPROFILE ?? '').replace(/\\/g, '/')}/.dsh`).replace(/\\/g, '/')
 #!/usr/bin/env node
+const DSH = (process.env.DSH_HOME ?? `${(process.env.USERPROFILE ?? '').replace(/\\/g, '/')}/.dsh`).replace(/\\/g, '/')
 /**
  * 给 dsh-approval-gate 打一个本地补丁：结构化路径字段不再走文本提取器。
  *
