@@ -17,7 +17,7 @@ const cut = reason.indexOf(': ')
 const justification = cut >= 0 ? reason.slice(cut + 2) : ''
 
 const args = {
-  command: "icacls 'D:\\DeepSeek Harness工作目录\\DeepSeek' /grant 'Administrator:(OI)(CI)F' /T",
+  command: "icacls 'D:\\DeepSeek Harness工作目录\\DeepSeek' /grant '<user>:(OI)(CI)F' /T",
   justification,
   sandbox_permissions: 'danger-full-access'
 }

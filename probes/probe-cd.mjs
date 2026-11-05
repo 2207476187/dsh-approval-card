@@ -1,10 +1,12 @@
-import { buildSummaryLine, extractPaths, matchOperation } from 'file:///C:/Users/<user>/.dsh/profiles/desktop/plugins/dsh-approval-card/src/text.mjs'
+import { pathToFileURL } from 'node:url'
+const DSH = (process.env.DSH_HOME ?? `${(process.env.USERPROFILE ?? '').replace(/\\/g, '/')}/.dsh`).replace(/\\/g, '/')
+const { buildSummaryLine, extractPaths, matchOperation } = await import(pathToFileURL(`${DSH}/profiles/desktop/plugins/dsh-approval-card/src/text.mjs`).href)
 
 const WORK = 'D:\\DeepSeek Harness工作目录\\DeepSeek'
 const cases = [
 	`cd '${WORK}' && node ..\\audit.js --in C:\\tmp\\report.json`,
 	`Set-Location 'C:\\Windows\\Temp'; Remove-Item 'C:\\Windows\\Temp\\a.txt'`,
-	`cd ${WORK}; Get-Content 'C:\\Users\\Administrator\\.dsh\\sessions\\x.jsonl'`,
+	`cd ${WORK}; Get-Content 'C:\\Users\\<user>\\.dsh\\sessions\\x.jsonl'`,
 	`node audit.js --out C:\\tmp\\x.json`,
 ]
 for (const command of cases) {

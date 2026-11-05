@@ -1,9 +1,10 @@
+const DSH = (process.env.DSH_HOME ?? `${(process.env.USERPROFILE ?? '').replace(/\\/g, '/')}/.dsh`).replace(/\\/g, '/')
 // 分析「一次操作弹两张卡」：同一 callId 的多次 approval/asked 的顺序、时间差、决策结果与形态。
 import { readFileSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { zstdDecompressSync } from 'node:zlib'
 
-const ROOT = 'C:\\Users\\Administrator\\.dsh\\sessions\\--D-DeepSeek~0020Harness~5DE5~4F5C~76EE~5F55-DeepSeek--'
+const ROOT = `${DSH}/sessions/--D-DeepSeek~0020Harness~5DE5~4F5C~76EE~5F55-DeepSeek--`
 
 function decode(file) {
 	const buf = readFileSync(file)

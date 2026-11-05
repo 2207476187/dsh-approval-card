@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+import { pathToFileURL } from 'node:url'
+const DSH = (process.env.DSH_HOME ?? `${(process.env.USERPROFILE ?? '').replace(/\\/g, '/')}/.dsh`).replace(/\\/g, '/')
 /**
  * 验证 tools/patch-approval-gate.mjs 打上的补丁行为（不需要重启 DSH）。
  *
@@ -9,9 +11,9 @@
 import { readFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { dirname, join } from 'node:path'
-import { extractAbsolutePaths, classifyPathScope, resolveRoots } from 'file:///C:/Users/<user>/.dsh/profiles/desktop/node_modules/dsh-approval-gate/src/paths.mjs'
+const { extractAbsolutePaths, classifyPathScope, resolveRoots } = await import(pathToFileURL(`${DSH}/profiles/desktop/node_modules/dsh-approval-gate/src/paths.mjs`).href)
 
-const PROFILE = 'C:\\Users\\Administrator\\.dsh\\profiles\\desktop'
+const PROFILE = `${DSH}/profiles/desktop`
 const WS = 'D:\\DeepSeek Harness工作目录\\DeepSeek'
 const req = createRequire(join(PROFILE, 'package.json'))
 const src = readFileSync(join(dirname(dirname(req.resolve('dsh-approval-gate'))), 'src', 'index.mjs'), 'utf8')
@@ -27,7 +29,7 @@ if (i < 0 || j < 0) {
 const body = src.slice(i, j)
 const make = new Function('found', 'seen', 'add', 'extractAbsolutePaths', `${body}\n return addStructured`)
 
-const roots = resolveRoots(WS, { dshHome: 'C:\\Users\\Administrator\\.dsh' })
+const roots = resolveRoots(WS, { dshHome: DSH })
 
 function run(value) {
   const found = []
@@ -53,7 +55,7 @@ const cases = [
   ['POSIX 根', '/data/adb/modules', 'data', 'outside'],
   ['设备/伪文件', '/proc/cmdline', 'device', 'unknown'],
   ['相对路径（交回文本提取，取不到绝对路径）', 'src/text.mjs', null, 'unknown'],
-  ['真实工作区外路径仍要拦', 'C:\\Users\\Administrator\\.ssh\\id_rsa', 'data', 'outside'],
+  ['真实工作区外路径仍要拦', 'C:\\Users\\<user>\\.ssh\\id_rsa', 'data', 'outside'],
 ]
 
 let fail = 0

@@ -369,14 +369,14 @@ dll
 
 ```
 对 D:\DeepSeek Harness工作目录\DeepSeek\probes\probe-missing-args.mjs 进行写入文件 [ 写入 ]
-目标含工作区外路径 1 处：C:\\Users\\Administrator\\.dsh\\sessions\\--D-DeepSeek~0020Harness~5DE5~4F5C~76EE~5F55-DeepSeek--
+目标含工作区外路径 1 处：C:\\\\Users\\\\<user>\\.dsh\\sessions\\--D-DeepSeek~0020Harness~5DE5~4F5C~76EE~5F55-DeepSeek--
 ```
 
 ### 50. 19:23:01Z
 
 ```
 对 D:\DeepSeek Harness工作目录\DeepSeek\probes\probe-last.mjs 进行写入文件 [ 写入 ]
-目标含工作区外路径 1 处：C:\\Users\\Administrator\\.dsh\\sessions\\--D-DeepSeek~0020Harness~5DE5~4F5C~76EE~5F55-DeepSeek--
+目标含工作区外路径 1 处：C:\\\\Users\\\\<user>\\.dsh\\sessions\\--D-DeepSeek~0020Harness~5DE5~4F5C~76EE~5F55-DeepSeek--
 ```
 
 ### 51. 19:23:38Z

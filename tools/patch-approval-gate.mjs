@@ -1,3 +1,4 @@
+const DSH = (process.env.DSH_HOME ?? `${(process.env.USERPROFILE ?? '').replace(/\\/g, '/')}/.dsh`).replace(/\\/g, '/')
 #!/usr/bin/env node
 /**
  * 给 dsh-approval-gate 打一个本地补丁：结构化路径字段不再走文本提取器。
@@ -23,7 +24,7 @@ import { createRequire } from 'node:module'
 import { dirname, join } from 'node:path'
 import { execFileSync } from 'node:child_process'
 
-const PROFILE = 'C:\\Users\\Administrator\\.dsh\\profiles\\desktop'
+const PROFILE = `${DSH}/profiles/desktop`
 const MARKER = 'addStructured'
 
 function gateDir() {

@@ -1,11 +1,11 @@
+import { pathToFileURL } from 'node:url'
+const DSH = (process.env.DSH_HOME ?? `${(process.env.USERPROFILE ?? '').replace(/\\/g, '/')}/.dsh`).replace(/\\/g, '/')
 // 回放探针：把会话里真实发生过的 approval/asked 事件喂给最新 text.mjs，对比改写前后。
 // 用途：不起 GUI、不重启，就能验证卡片文案在真实请求上是否正确。
 import { readFileSync } from 'node:fs'
 import { zstdDecompressSync } from 'node:zlib'
 
-const { applySummaryText } = await import(
-	'file:///C:/Users/<user>/.dsh/profiles/desktop/plugins/dsh-approval-card/src/text.mjs'
-)
+const { applySummaryText } = await import(pathToFileURL(`${DSH}/profiles/desktop/plugins/dsh-approval-card/src/text.mjs`).href)
 
 const buf = readFileSync(process.argv[2])
 const magic = [0x28, 0xb5, 0x2f, 0xfd]

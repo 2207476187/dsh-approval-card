@@ -1,10 +1,13 @@
+import { pathToFileURL } from 'node:url'
+const DSH = (process.env.DSH_HOME ?? `${(process.env.USERPROFILE ?? '').replace(/\\/g, '/')}/.dsh`).replace(/\\/g, '/')
 /**
  * 端到端校验插件入口（不只是纯函数）：用假 ctx 抓出 approval/request 处理器，
  * 对同一个 callId 连喂两条请求，看第二张卡是否自报序号、是否始终 return next()。
  *
  * 跑：node probes/probe-handler.mjs
  */
-import plugin from 'file:///C:/Users/<user>/.dsh/profiles/desktop/plugins/dsh-approval-card/src/index.mjs'
+const mod = await import(pathToFileURL(`${DSH}/profiles/desktop/plugins/dsh-approval-card/src/index.mjs`).href)
+const plugin = mod.default ?? mod
 
 let handler = null
 let registered = null
@@ -76,7 +79,8 @@ const ok =
 	!first.displayReason.zh.includes('个审批请求') &&
 	second.displayReason?.zh?.includes('（同一次操作的第 2 个审批请求）') &&
 	!third.displayReason?.zh?.includes('个审批请求') &&
-	pre1.displayReason.zh === preZh &&
+	pre1.displayReason.zh.startsWith(preZh.split('\n')[0].trim()) &&
+	pre1.displayReason.zh.includes('判定器不可用') &&
 	pre2.displayReason.zh.includes('（同一次操作的第 2 个审批请求）')
 console.log('\n断言:', ok ? '全部通过' : '有未通过项')
 process.exit(ok ? 0 : 1)

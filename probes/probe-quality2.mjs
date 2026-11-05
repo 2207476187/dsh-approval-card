@@ -1,6 +1,8 @@
+import { pathToFileURL } from 'node:url'
+const DSH = (process.env.DSH_HOME ?? `${(process.env.USERPROFILE ?? '').replace(/\\/g, '/')}/.dsh`).replace(/\\/g, '/')
 import { readFileSync } from 'node:fs'
 import { zstdDecompressSync } from 'node:zlib'
-const { applySummaryText } = await import('file:///C:/Users/<user>/.dsh/profiles/desktop/plugins/dsh-approval-card/src/text.mjs')
+const { applySummaryText } = await import(pathToFileURL(`${DSH}/profiles/desktop/plugins/dsh-approval-card/src/text.mjs`).href)
 const buf = readFileSync(process.argv[2])
 const magic=[0x28,0xb5,0x2f,0xfd]; const offs=[]
 for (let i=0;i+3<buf.length;i+=1) if (buf[i]===magic[0]&&buf[i+1]===magic[1]&&buf[i+2]===magic[2]&&buf[i+3]===magic[3]) offs.push(i)

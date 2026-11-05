@@ -1,9 +1,11 @@
+import { pathToFileURL } from 'node:url'
+const DSH = (process.env.DSH_HOME ?? `${(process.env.USERPROFILE ?? '').replace(/\\/g, '/')}/.dsh`).replace(/\\/g, '/')
 // 针对最近若干审批：打印 tool/call 的真实 arguments + 我们算出来的文案，定位 args 缺失与目标挑选问题。
 import { readFileSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { zstdDecompressSync } from 'node:zlib'
 
-const ROOT = 'C:\\Users\\Administrator\\.dsh\\sessions\\--D-DeepSeek~0020Harness~5DE5~4F5C~76EE~5F55-DeepSeek--'
+const ROOT = `${DSH}/sessions/--D-DeepSeek~0020Harness~5DE5~4F5C~76EE~5F55-DeepSeek--`
 
 function decode(file) {
 	const buf = readFileSync(file)
@@ -56,7 +58,7 @@ const cwdEvent = events.find((e) => e.type === 'session')
 const cwd = cwdEvent?.data?.header?.cwd ?? cwdEvent?.data?.cwd ?? '?'
 console.log('cwd:', cwd)
 
-const { applySummaryText } = await import('file:///C:/Users/<user>/.dsh/profiles/desktop/plugins/dsh-approval-card/src/text.mjs')
+const { applySummaryText } = await import(pathToFileURL(`${DSH}/profiles/desktop/plugins/dsh-approval-card/src/text.mjs`).href)
 
 const asked = events.filter((e) => e.type === 'approval/asked')
 for (const a of asked.slice(-8)) {

@@ -1,8 +1,9 @@
+const DSH = (process.env.DSH_HOME ?? `${(process.env.USERPROFILE ?? '').replace(/\\/g, '/')}/.dsh`).replace(/\\/g, '/')
 // 端到端验证：两种审批请求形态在卡片上显示成什么。
 import { pathToFileURL } from 'node:url'
 import { join } from 'node:path'
 
-const home = process.env.DSH_HOME ?? 'C:/Users/<user>/.dsh'
+const home = DSH
 const mod = await import(pathToFileURL(join(home, 'profiles/desktop/plugins/dsh-approval-zh/src/approval-zh.mjs')).href)
 const { applySummaryText } = mod
 
@@ -51,7 +52,7 @@ show('C 审批门 / edit 工作区外', {
 	toolName: 'edit',
 	callId: 'c3',
 	reason: '目标含工作区外路径 2 处：/proc/cmdline , D:\\DeepSeek',
-	agent: { session: sessionWith([callEvent('c3', 'edit', { file_path: 'C:\\Users\\Administrator\\.dsh\\profiles\\desktop\\cordis.patch.yml' })], 'D:\\DeepSeek Harness工作目录\\DeepSeek') }
+	agent: { session: sessionWith([callEvent('c3', 'edit', { file_path: 'C:\\Users\\<user>\\.dsh\\profiles\\desktop\\cordis.patch.yml' })], 'D:\\DeepSeek Harness工作目录\\DeepSeek') }
 })
 
 // D. 幂等：已经带总结的文案不应再叠加

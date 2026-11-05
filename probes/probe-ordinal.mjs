@@ -1,3 +1,4 @@
+const DSH = (process.env.DSH_HOME ?? `${(process.env.USERPROFILE ?? '').replace(/\\/g, '/')}/.dsh`).replace(/\\/g, '/')
 /**
  * 用真实会话验证「同一调用的第 N 个审批请求」编号。
  *
@@ -12,7 +13,7 @@ import { readFileSync } from 'node:fs'
 import { zstdDecompressSync } from 'node:zlib'
 import { pathToFileURL } from 'node:url'
 
-const PLUGIN = 'C:/Users/<user>/.dsh/profiles/desktop/plugins/dsh-approval-card/src/text.mjs'
+const PLUGIN = `${DSH}/profiles/desktop/plugins/dsh-approval-card/src/text.mjs`
 const file = process.argv[2]
 if (file === undefined) {
 	console.error('用法: node probes/probe-ordinal.mjs <session.v4.jsonl.zstd>')

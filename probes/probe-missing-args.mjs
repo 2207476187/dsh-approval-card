@@ -1,9 +1,10 @@
+const DSH = (process.env.DSH_HOME ?? `${(process.env.USERPROFILE ?? '').replace(/\\/g, '/')}/.dsh`).replace(/\\/g, '/')
 // 找出「改写落到 cwd 兜底」的审批，检查同 callId 的 tool 调用事件是否真的存在。
 import { readFileSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { zstdDecompressSync } from 'node:zlib'
 
-const ROOT = 'C:\\Users\\Administrator\\.dsh\\sessions\\--D-DeepSeek~0020Harness~5DE5~4F5C~76EE~5F55-DeepSeek--'
+const ROOT = `${DSH}/sessions/--D-DeepSeek~0020Harness~5DE5~4F5C~76EE~5F55-DeepSeek--`
 
 function decode(file) {
 	const buf = readFileSync(file)

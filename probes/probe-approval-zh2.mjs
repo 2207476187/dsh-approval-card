@@ -1,8 +1,9 @@
+const DSH = (process.env.DSH_HOME ?? `${(process.env.USERPROFILE ?? '').replace(/\\/g, '/')}/.dsh`).replace(/\\/g, '/')
 // 验证审批卡片文案修复：路径不再在空白处截断、目标取完整原文。
 import { pathToFileURL } from 'node:url'
 import { join } from 'node:path'
 
-const home = process.env.DSH_HOME ?? 'C:/Users/<user>/.dsh'
+const home = DSH
 const mod = await import(pathToFileURL(join(home, 'profiles/desktop/plugins/dsh-approval-zh/src/approval-zh.mjs')).href)
 
 const { extractPaths, buildSummaryLine, hasSummary } = mod
@@ -46,7 +47,7 @@ const summaryC = buildSummaryLine({
 	toolName: 'edit',
 	mode: '',
 	justification: '改审批门插件的文案',
-	args: { file_path: 'C:\\Users\\Administrator\\.dsh\\profiles\\desktop\\plugins\\dsh-approval-zh\\src\\approval-zh.mjs' },
+	args: { file_path: 'C:\\Users\\<user>\\.dsh\\profiles\\desktop\\plugins\\dsh-approval-zh\\src\\approval-zh.mjs' },
 	argsSource: 'lastSameTool',
 	cwd: 'D:\\DeepSeek Harness工作目录\\DeepSeek'
 })

@@ -1,9 +1,11 @@
+import { pathToFileURL } from 'node:url'
+const DSH = (process.env.DSH_HOME ?? `${(process.env.USERPROFILE ?? '').replace(/\\/g, '/')}/.dsh`).replace(/\\/g, '/')
 // 临时探针：看某次 pwsh 下载命令的 args 与 targetFor 的取值优先级。
 import { readFileSync } from 'node:fs'
 import { zstdDecompressSync } from 'node:zlib'
 
 const { extractPaths, matchOperation, targetFor } = await import(
-	'file:///C:/Users/<user>/.dsh/profiles/desktop/plugins/dsh-approval-card/src/text.mjs'
+	pathToFileURL(`${DSH}/profiles/desktop/plugins/dsh-approval-card/src/text.mjs`).href
 )
 
 const buf = readFileSync(process.argv[2])
