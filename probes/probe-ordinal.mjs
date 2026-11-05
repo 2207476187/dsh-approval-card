@@ -12,7 +12,7 @@ import { readFileSync } from 'node:fs'
 import { zstdDecompressSync } from 'node:zlib'
 import { pathToFileURL } from 'node:url'
 
-const PLUGIN = 'C:/Users/Administrator/.dsh/profiles/desktop/plugins/dsh-approval-card/src/text.mjs'
+const PLUGIN = 'C:/Users/<user>/.dsh/profiles/desktop/plugins/dsh-approval-card/src/text.mjs'
 const file = process.argv[2]
 if (file === undefined) {
 	console.error('用法: node probes/probe-ordinal.mjs <session.v4.jsonl.zstd>')

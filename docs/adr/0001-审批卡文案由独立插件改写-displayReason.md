@@ -26,7 +26,7 @@
 
 ## 决定
 
-选 3，并落在 `C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card\`
+选 3，并落在 `C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card\`
 （不是 `node_modules`、不是程序目录 —— 那两处在 DSH 更新时会被重写）。
 
 理由：

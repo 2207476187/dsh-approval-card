@@ -9,7 +9,7 @@
 import { readFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { dirname, join } from 'node:path'
-import { extractAbsolutePaths, classifyPathScope, resolveRoots } from 'file:///C:/Users/Administrator/.dsh/profiles/desktop/node_modules/dsh-approval-gate/src/paths.mjs'
+import { extractAbsolutePaths, classifyPathScope, resolveRoots } from 'file:///C:/Users/<user>/.dsh/profiles/desktop/node_modules/dsh-approval-gate/src/paths.mjs'
 
 const PROFILE = 'C:\\Users\\Administrator\\.dsh\\profiles\\desktop'
 const WS = 'D:\\DeepSeek Harness工作目录\\DeepSeek'

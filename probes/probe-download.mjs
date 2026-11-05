@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs'
 import { zstdDecompressSync } from 'node:zlib'
 
 const { extractPaths, matchOperation, targetFor } = await import(
-	'file:///C:/Users/Administrator/.dsh/profiles/desktop/plugins/dsh-approval-card/src/text.mjs'
+	'file:///C:/Users/<user>/.dsh/profiles/desktop/plugins/dsh-approval-card/src/text.mjs'
 )
 
 const buf = readFileSync(process.argv[2])

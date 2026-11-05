@@ -56,7 +56,7 @@ const cwdEvent = events.find((e) => e.type === 'session')
 const cwd = cwdEvent?.data?.header?.cwd ?? cwdEvent?.data?.cwd ?? '?'
 console.log('cwd:', cwd)
 
-const { applySummaryText } = await import('file:///C:/Users/Administrator/.dsh/profiles/desktop/plugins/dsh-approval-card/src/text.mjs')
+const { applySummaryText } = await import('file:///C:/Users/<user>/.dsh/profiles/desktop/plugins/dsh-approval-card/src/text.mjs')
 
 const asked = events.filter((e) => e.type === 'approval/asked')
 for (const a of asked.slice(-8)) {

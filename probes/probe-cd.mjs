@@ -1,4 +1,4 @@
-import { buildSummaryLine, extractPaths, matchOperation } from 'file:///C:/Users/Administrator/.dsh/profiles/desktop/plugins/dsh-approval-card/src/text.mjs'
+import { buildSummaryLine, extractPaths, matchOperation } from 'file:///C:/Users/<user>/.dsh/profiles/desktop/plugins/dsh-approval-card/src/text.mjs'
 
 const WORK = 'D:\\DeepSeek Harness工作目录\\DeepSeek'
 const cases = [

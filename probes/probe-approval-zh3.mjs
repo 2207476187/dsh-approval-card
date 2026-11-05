@@ -2,7 +2,7 @@
 import { pathToFileURL } from 'node:url'
 import { join } from 'node:path'
 
-const home = process.env.DSH_HOME ?? 'C:/Users/Administrator/.dsh'
+const home = process.env.DSH_HOME ?? 'C:/Users/<user>/.dsh'
 const mod = await import(pathToFileURL(join(home, 'profiles/desktop/plugins/dsh-approval-zh/src/approval-zh.mjs')).href)
 const { applySummaryText } = mod
 

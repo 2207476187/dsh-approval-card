@@ -8,7 +8,7 @@
 
 ```
 对 $env:DSH_HOME\profiles\desktop\cordis.patch.yml 进行查找或读取 [ 读取 ]
-目标含工作区外路径 1 处：C:\Users\Administrator\.dsh\profiles\desktop
+目标含工作区外路径 1 处：C:\Users\<user>\.dsh\profiles\desktop
 ```
 
 ### 2. 11:59:48Z
@@ -149,7 +149,7 @@ dll
 
 ```
 对 D:\DeepSeek Harness工作目录\DeepSeek\docs\adr\0001-审批卡文案由独立插件改写-displayReason.md 进行写入文件 [ 写入 ]
-目标含工作区外路径 2 处：p://`（来自 , C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card\
+目标含工作区外路径 2 处：p://`（来自 , C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card\
 ```
 
 ### 20. 18:30:24Z
@@ -183,17 +183,17 @@ dll
 ### 24. 18:49:07Z
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card 进行查找或读取 [ 读取 ]
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card 进行查找或读取 [ 读取 ]
 目标：工作区外
 拦截：递归删除：命令会递归删除目录，不可回滚
-命令：$p='C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card'
-原因：目标含工作区外路径 1 处：C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card
+命令：$p='C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card'
+原因：目标含工作区外路径 1 处：C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card
 ```
 
 ### 25. 18:49:15Z
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card 进行查找或读取 [ 读取 ]
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card 进行查找或读取 [ 读取 ]
 允许本次操作使用 完全访问（不受限） 权限：查看现有本地插件的清单与入口形式，确认 Cordis 插件 API 用法。
 ```
 
@@ -284,7 +284,7 @@ dll
 ### 38. 19:17:10Z
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card\README.md 进行查找或读取 [ 读取 ]
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card\README.md 进行查找或读取 [ 读取 ]
 目标含工作区外路径 1 处
 ```
 
@@ -299,14 +299,14 @@ dll
 ### 40. 19:17:17Z
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card\README.md 进行修改文件 [ 修改 ]
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card\README.md 进行修改文件 [ 修改 ]
 目标含工作区外路径 2 处
 ```
 
 ### 41. 19:17:17Z
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card\README.md 进行修改文件 [ 修改 ]
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card\README.md 进行修改文件 [ 修改 ]
 权限：完全访问（整机可读写、含系统位置、不可自动回滚）
 理由：记录本轮三处行为变化：模板只留理由、相对命令带 workdir、日志轮转。
 ```
@@ -314,14 +314,14 @@ dll
 ### 42. 19:17:23Z
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card\README.md 进行修改文件 [ 修改 ]
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card\README.md 进行修改文件 [ 修改 ]
 目标含工作区外路径 1 处
 ```
 
 ### 43. 19:17:23Z
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card\README.md 进行修改文件 [ 修改 ]
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card\README.md 进行修改文件 [ 修改 ]
 权限：完全访问（整机可读写、含系统位置、不可自动回滚）
 理由：补充日志轮转与显示名说明。
 ```
@@ -329,7 +329,7 @@ dll
 ### 44. 19:17:27Z
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card 进行运行程序 [ 执行 ]
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card 进行运行程序 [ 执行 ]
 目标含工作区外路径 2 处
 ```
 
@@ -337,20 +337,20 @@ dll
 
 ```
 对 https://registry.npmjs.org/billion-context 进行下载 [ 写入 ]
-目标含工作区外路径 1 处：C:\Users\Administrator\.dsh\profiles\desktop\node_modules\billion-context\package.json；网络外发：Invoke-RestMethod
+目标含工作区外路径 1 处：C:\Users\<user>\.dsh\profiles\desktop\node_modules\billion-context\package.json；网络外发：Invoke-RestMethod
 ```
 
 ### 46. 19:18:15Z
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop 进行命令执行 [ 执行 ]
+对 C:\Users\<user>\.dsh\profiles\desktop 进行命令执行 [ 执行 ]
 目标含工作区外路径 1 处
 ```
 
 ### 47. 19:18:15Z
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop 进行命令执行 [ 执行 ]
+对 C:\Users\<user>\.dsh\profiles\desktop 进行命令执行 [ 执行 ]
 权限：完全访问（整机可读写、含系统位置、不可自动回滚）
 理由：核对 registry 上是否还有 0.1.212，判断未来安装插件是否会失败。
 ```
@@ -358,11 +358,11 @@ dll
 ### 48. 19:21:12Z
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card\src\text.mjs 进行查找或读取 [ 读取 ]
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card\src\text.mjs 进行查找或读取 [ 读取 ]
 目标：工作区外
 拦截：递归删除：命令会递归删除目录，不可回滚
-命令：$p='C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card\src\text.mjs'
-原因：目标含工作区外路径 1 处：C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card\src\text.mjs
+命令：$p='C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card\src\text.mjs'
+原因：目标含工作区外路径 1 处：C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card\src\text.mjs
 ```
 
 ### 49. 19:22:24Z
@@ -382,53 +382,53 @@ dll
 ### 51. 19:23:38Z
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card\src\text.mjs 进行查找或读取 [ 读取 ]
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card\src\text.mjs 进行查找或读取 [ 读取 ]
 目标：工作区外
 拦截：递归删除：命令会递归删除目录，不可回滚
-命令：$p='C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card\src\text.mjs'
-原因：目标含工作区外路径 1 处：C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card\src\text.mjs
+命令：$p='C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card\src\text.mjs'
+原因：目标含工作区外路径 1 处：C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card\src\text.mjs
 ```
 
 ### 52. 19:25:18Z
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card\test\text.test.mjs 进行写入文件 [ 写入 ]
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card\test\text.test.mjs 进行写入文件 [ 写入 ]
 ```
 
 ### 53. 19:25:51Z
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card\test\text.test.mjs 进行写入文件 [ 写入 ]
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card\test\text.test.mjs 进行写入文件 [ 写入 ]
 理由：测试文件在 $DSH_HOME 下的插件目录，需要写入两条新断言。
 ```
 
 ### 54. 19:26:17Z
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card\test\text.test.mjs 进行写入文件 [ 写入 ]
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card\test\text.test.mjs 进行写入文件 [ 写入 ]
 ```
 
 ### 55. 19:26:24Z
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card\test\text.test.mjs 进行写入文件 [ 写入 ]
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card\test\text.test.mjs 进行写入文件 [ 写入 ]
 理由：测试断言需与新行为（按实际列出的条数计数）一致，文件在 $DSH_HOME 下。
 ```
 
 ### 56. 19:26:49Z
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card\README.md 进行写入文件 [ 写入 ]
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card\README.md 进行写入文件 [ 写入 ]
 目标：工作区外
 拦截：网络下载：命令调用了下载器，可能被诱导取回恶意脚本或可执行文件
-命令：$p='C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card'
-原因：目标含工作区外路径 2 处：C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card , C:\x\pkg.json；网络外发：Invoke-RestMethod
+命令：$p='C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card'
+原因：目标含工作区外路径 2 处：C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card , C:\x\pkg.json；网络外发：Invoke-RestMethod
 ```
 
 ### 57. 19:27:13Z
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card\README.md 进行写入文件 [ 写入 ]
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card\README.md 进行写入文件 [ 写入 ]
 理由：插件 README 在 $DSH_HOME 下，需记录本轮三处行为变化。
 ```
 
@@ -446,14 +446,14 @@ dll
 ### 59. 19:29:25Z
 
 ```
-对 C:\Users\Administrator\AppData\Local\Temp\dsh-card-check.txt 进行写入文件 [ 写入 ]
+对 C:\Users\<user>\AppData\Local\Temp\dsh-card-check.txt 进行写入文件 [ 写入 ]
 目标含工作区外路径 1 处
 ```
 
 ### 60. 19:29:33Z
 
 ```
-对 C:\Users\Administrator\AppData\Local\Temp\dsh-card-check.txt 进行写入文件 [ 写入 ]
+对 C:\Users\<user>\AppData\Local\Temp\dsh-card-check.txt 进行写入文件 [ 写入 ]
 理由：在系统临时目录写入一个校验文件，用来验证审批卡是否显示精确目标。
 ```
 
@@ -463,20 +463,20 @@ dll
 
 ```
 对 D:\DeepSeek Harness工作目录\DeepSeek\probes\probe-twocards.mjs 进行写入文件 [ 写入 ]
-目标含工作区外路径 1 处：C:\Users\Administrator\.dsh\sessions\--D-DeepSeek~0020Harness~5DE5~4F5C~76EE~5F55-DeepSeek--
+目标含工作区外路径 1 处：C:\Users\<user>\.dsh\sessions\--D-DeepSeek~0020Harness~5DE5~4F5C~76EE~5F55-DeepSeek--
 ```
 
 ### 62. 05:50:08Z
 
 ```
-对 C:\Users\Administrator\.dsh\auto-approve 进行查找或读取 [ 读取 ]
-目标含工作区外路径 1 处：C:\Users\Administrator\.dsh\profiles\desktop\node_modules\dsh-approval-gate\src\index.mjs
+对 C:\Users\<user>\.dsh\auto-approve 进行查找或读取 [ 读取 ]
+目标含工作区外路径 1 处：C:\Users\<user>\.dsh\profiles\desktop\node_modules\dsh-approval-gate\src\index.mjs
 ```
 
 ### 63. 05:50:34Z
 
 ```
-对 C:\Users\Administrator\.dsh\auto-approve\audit.log 进行查找或读取 [ 读取 ]
+对 C:\Users\<user>\.dsh\auto-approve\audit.log 进行查找或读取 [ 读取 ]
 目标含工作区外路径 1 处（就是上面那个）
 ```
 
@@ -484,41 +484,41 @@ dll
 
 ```
 对 D:\DeepSeek Harness工作目录\DeepSeek\probes\probe-ordinal.mjs 进行写入文件 [ 写入 ]
-目标含工作区外路径 1 处：C:/Users/Administrator/.dsh/profiles/desktop/plugins/dsh-approval-card/src/text.mjs
+目标含工作区外路径 1 处：C:/Users/<user>/.dsh/profiles/desktop/plugins/dsh-approval-card/src/text.mjs
 ```
 
 ### 65. 06:01:52Z
 
 ```
 对 D:\DeepSeek Harness工作目录\DeepSeek\probes\probe-cd.mjs 进行写入文件 [ 写入 ]
-目标含工作区外路径 3 处：C:\Windows\Temp、C:\Windows\Temp\a.txt、C:\Users\Administrator\.dsh\sessions\x.jsonl
+目标含工作区外路径 3 处：C:\Windows\Temp、C:\Windows\Temp\a.txt、C:\Users\<user>\.dsh\sessions\x.jsonl
 ```
 
 ### 66. 10:00:27Z
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card\.activity.log 进行查找或读取 [ 读取 ]
-目标含工作区外路径 1 处：C:\Users\Administrator\.dsh\auto-approve\audit.log
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card\.activity.log 进行查找或读取 [ 读取 ]
+目标含工作区外路径 1 处：C:\Users\<user>\.dsh\auto-approve\audit.log
 ```
 
 ### 67. 10:05:23Z
 
 ```
-对 C:\Users\Administrator\.dsh\auto-approve\audit.log 进行查找或读取 [ 读取 ]
+对 C:\Users\<user>\.dsh\auto-approve\audit.log 进行查找或读取 [ 读取 ]
 目标含工作区外路径 1 处（就是上面那个）
 ```
 
 ### 68. 10:07:35Z
 
 ```
-对 C:\Users\Administrator\.dsh 进行查找或读取 [ 读取 ]
+对 C:\Users\<user>\.dsh 进行查找或读取 [ 读取 ]
 理由：$r" } }
 Write-Host '=== 在 $DSH_HOME 里找提到 dsh-approval-card 的非插件文件（≤200 条）==='
-Get-ChildItem 'C:\Users\Administrator\.dsh' -Recurse -File -ErrorAction SilentlyContinue |
+Get-ChildItem 'C:\Users\<user>\.dsh' -Recurse -File -ErrorAction SilentlyContinue |
 Where-Object { $_.FullName -notlike '*plugins\dsh-approval-card*' -and $_.Length -lt 4MB -and $_.Extension -in '.json','.js','.mjs','.yml','.yaml','.txt','.log' } |
 Select-String -Pattern 'dsh-approval-card' -List -ErrorAction SilentlyContinue |
 Select-Object -First 20 | ForEach-Object { $_.Path }
-原因：目标含工作区外路径 5 处：C:\Users\Administrator\.dsh\cache , C:\Users\Administrator\.dsh\.cache , C:\Users\Administrator\.dsh\runtime
+原因：目标含工作区外路径 5 处：C:\Users\<user>\.dsh\cache , C:\Users\<user>\.dsh\.cache , C:\Users\<user>\.dsh\runtime
 ```
 
 ### 69. 10:09:21Z
@@ -538,14 +538,14 @@ Select-Object -First 20 | ForEach-Object { $_.Path }
 ### 71. 10:12:39Z
 
 ```
-对 C:\Users\Administrator\.dsh\auto-approve\audit.log 进行查找或读取 [ 读取 ]
+对 C:\Users\<user>\.dsh\auto-approve\audit.log 进行查找或读取 [ 读取 ]
 目标含工作区外路径 1 处（就是上面那个）
 ```
 
 ### 72. 10:13:39Z
 
 ```
-对 C:\Users\Administrator\.dsh\auto-approve\events.jsonl 进行命令执行 [ 执行 ]
+对 C:\Users\<user>\.dsh\auto-approve\events.jsonl 进行命令执行 [ 执行 ]
 目标含工作区外路径 1 处（就是上面那个）
 ```
 
@@ -581,7 +581,7 @@ Select-Object -First 20 | ForEach-Object { $_.Path }
 
 ```
 对 D:\DeepSeek Harness工作目录\DeepSeek\probes\probe-gate-patch.mjs 进行写入文件 [ 写入 ]
-目标含工作区外路径 3 处：C:\Users\Administrator\.dsh\profiles\desktop、C:\Users\Administrator\.dsh、X:\Program Files\DeepSeek Harness\resources\app\dsh\index.js；涉及凭据/密钥：.ssh\
+目标含工作区外路径 3 处：C:\Users\<user>\.dsh\profiles\desktop、C:\Users\<user>\.dsh、X:\Program Files\DeepSeek Harness\resources\app\dsh\index.js；涉及凭据/密钥：.ssh\
 ```
 
 ### 78. 10:22:22Z
@@ -594,28 +594,28 @@ Select-Object -First 20 | ForEach-Object { $_.Path }
 ### 79. 10:25:10Z
 
 ```
-对 C:\Users\Administrator\.dsh\auto-approve\audit.log 进行查找或读取 [ 读取 ]
-目标含工作区外路径 1 处：C:\Users\Administrator\.dsh\auto-approve\events.jsonl
+对 C:\Users\<user>\.dsh\auto-approve\audit.log 进行查找或读取 [ 读取 ]
+目标含工作区外路径 1 处：C:\Users\<user>\.dsh\auto-approve\events.jsonl
 ```
 
 ### 80. 10:25:44Z
 
 ```
-对 C:\Users\Administrator\.dsh\auto-approve\events.jsonl 进行查找或读取 [ 读取 ]
-目标含工作区外路径 1 处：C:\Users\Administrator\.dsh\auto-approve\audit.log
+对 C:\Users\<user>\.dsh\auto-approve\events.jsonl 进行查找或读取 [ 读取 ]
+目标含工作区外路径 1 处：C:\Users\<user>\.dsh\auto-approve\audit.log
 ```
 
 ### 81. 10:25:56Z
 
 ```
-对 C:\Users\Administrator\.dsh\auto-approve\events.jsonl 进行命令执行 [ 执行 ]
+对 C:\Users\<user>\.dsh\auto-approve\events.jsonl 进行命令执行 [ 执行 ]
 目标含工作区外路径 1 处（就是上面那个）
 ```
 
 ### 82. 10:26:23Z
 
 ```
-对 C:\Users\Administrator\.dsh\auto-approve\events.jsonl 进行命令执行 [ 执行 ]
+对 C:\Users\<user>\.dsh\auto-approve\events.jsonl 进行命令执行 [ 执行 ]
 目标含工作区外路径 2 处
 ```
 
@@ -623,7 +623,7 @@ Select-Object -First 20 | ForEach-Object { $_.Path }
 
 ```
 对 D:\DeepSeek Harness工作目录\DeepSeek\probes\fixtures\scope-check.txt 进行删除 [ 删除 ]
-目标含工作区外路径 1 处：C:\Users\Administrator\.dsh\auto-approve\events.jsonl
+目标含工作区外路径 1 处：C:\Users\<user>\.dsh\auto-approve\events.jsonl
 ```
 
 ### 84. 10:34:48Z
@@ -637,7 +637,7 @@ Select-Object -First 20 | ForEach-Object { $_.Path }
 ### 85. 10:35:09Z
 
 ```
-对 C:\Users\Administrator\AppData\Roaming\GitHub CLI\config.yml 进行下载 [ 写入 ]
+对 C:\Users\<user>\AppData\Roaming\GitHub CLI\config.yml 进行下载 [ 写入 ]
 目标：无法定域（没有绝对路径）
 拦截：网络下载：命令调用了下载器，可能被诱导取回恶意脚本或可执行文件
 命令：$ErrorActionPreference='Continue'
@@ -651,7 +651,7 @@ Select-Object -First 20 | ForEach-Object { $_.Path }
 目标：跨工作区内外
 拦截：递归删除：命令会递归删除目录，不可回滚
 命令：$ws='D:\DeepSeek Harness工作目录\DeepSeek'
-原因：目标含工作区外路径 1 处：C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card
+原因：目标含工作区外路径 1 处：C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card
 ```
 
 ### 87. 10:46:51Z
@@ -680,7 +680,7 @@ cd $keep
 git log --oneline -1 2>&1
 git remote -v 2>&1
 }
-原因：目标含工作区外路径 1 处：C:\Users\Administrator\AppData\Local\Temp\dsh-If9tUX\dsh-approval-card-plugin；破坏性动作：Remove-Item $keep -Recurse
+原因：目标含工作区外路径 1 处：C:\Users\<user>\AppData\Local\Temp\dsh-If9tUX\dsh-approval-card-plugin；破坏性动作：Remove-Item $keep -Recurse
 ```
 
 ### 89. 10:53:54Z
@@ -698,7 +698,7 @@ git remote -v 2>&1
 拦截：递归删除：命令会递归删除目录，不可回滚
 命令：$p='D:\DeepSeek Harness工作目录\DeepSeek\docs\devlog\2026-11.md'
 目标含工作区外路径 1 处
-原因：目标含工作区外路径 1 处：C:\Users\Administrator\.dsh\auto-approve\events.jsonl`），一眼看到两个吃路径的地方。；破坏性动作：Remove-Item $keep -Recurse
+原因：目标含工作区外路径 1 处：C:\Users\<user>\.dsh\auto-approve\events.jsonl`），一眼看到两个吃路径的地方。；破坏性动作：Remove-Item $keep -Recurse
 ```
 
 ### 91. 10:58:28Z
@@ -717,14 +717,14 @@ git remote -v 2>&1
 ### 93. 10:59:21Z
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card\.activity.log 进行查找或读取 [ 读取 ]
-目标含工作区外路径 1 处：C:\Users\Administrator\.dsh\auto-approve\audit.log
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card\.activity.log 进行查找或读取 [ 读取 ]
+目标含工作区外路径 1 处：C:\Users\<user>\.dsh\auto-approve\audit.log
 ```
 
 ### 94. 10:59:44Z · 同一次操作的第 2 次询问
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card\.activity.log 进行查找或读取 [ 读取 ]（同一次操作的第 2 个审批请求）
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card\.activity.log 进行查找或读取 [ 读取 ]（同一次操作的第 2 个审批请求）
 ```
 
 ### 95. 11:00:11Z
@@ -738,7 +738,7 @@ git remote -v 2>&1
 
 ```
 对 D:\DeepSeek Harness工作目录\DeepSeek 进行命令执行 [ 执行 ]
-目标含工作区外路径 1 处：C:\Users\Administrator\.dsh\auto-approve\events.jsonl
+目标含工作区外路径 1 处：C:\Users\<user>\.dsh\auto-approve\events.jsonl
 ```
 
 ### 97. 11:01:00Z · 同一次操作的第 2 次询问
@@ -758,7 +758,7 @@ git remote -v 2>&1
 
 ```
 对 当前工作目录 D:\DeepSeek Harness工作目录\DeepSeek 进行调用工具 [ 执行 ]
-目标含工作区外路径 1 处：C:\Users\Administrator\.dsh\auto-approve\events.jsonl
+目标含工作区外路径 1 处：C:\Users\<user>\.dsh\auto-approve\events.jsonl
 ```
 
 ### 100. 11:05:21Z
@@ -815,65 +815,65 @@ try { takeown /f $p *>$null; icacls $p /grant "Administrators:F" *>$null; Remove
 ### 107. 11:36:11Z
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card 进行写入文件 [ 写入 ]
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card 进行写入文件 [ 写入 ]
 目标：工作区外
 拦截：递归删除：命令会递归删除目录，不可回滚
-命令：cd 'C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card'
-原因：目标含工作区外路径 1 处：C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card
+命令：cd 'C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card'
+原因：目标含工作区外路径 1 处：C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card
 ```
 
 ### 108. 11:36:25Z · 同一次操作的第 2 次询问
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card 进行写入文件 [ 写入 ]（同一次操作的第 2 个审批请求）
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card 进行写入文件 [ 写入 ]（同一次操作的第 2 个审批请求）
 ```
 
 ### 109. 11:37:15Z
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card 进行写入文件 [ 写入 ]
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card 进行写入文件 [ 写入 ]
 目标：工作区外
 拦截：递归删除：命令会递归删除目录，不可回滚
-命令：cd 'C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card'
-原因：目标含工作区外路径 1 处：C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card
+命令：cd 'C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card'
+原因：目标含工作区外路径 1 处：C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card
 ```
 
 ### 110. 11:37:26Z · 同一次操作的第 2 次询问
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card 进行写入文件 [ 写入 ]（同一次操作的第 2 个审批请求）
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card 进行写入文件 [ 写入 ]（同一次操作的第 2 个审批请求）
 ```
 
 ### 111. 11:37:35Z
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card 进行写入文件 [ 写入 ]
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card 进行写入文件 [ 写入 ]
 目标：工作区外
 拦截：递归删除：命令会递归删除目录，不可回滚
-命令：cd 'C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card'
-原因：目标含工作区外路径 1 处：C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card
+命令：cd 'C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card'
+原因：目标含工作区外路径 1 处：C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card
 ```
 
 ### 112. 11:38:17Z · 同一次操作的第 2 次询问
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card 进行写入文件 [ 写入 ]（同一次操作的第 2 个审批请求）
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card 进行写入文件 [ 写入 ]（同一次操作的第 2 个审批请求）
 ```
 
 ### 113. 11:38:26Z
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card 进行写入文件 [ 写入 ]
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card 进行写入文件 [ 写入 ]
 目标：工作区外
 拦截：递归删除：命令会递归删除目录，不可回滚
-命令：cd 'C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card'
-原因：目标含工作区外路径 1 处：C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card
+命令：cd 'C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card'
+原因：目标含工作区外路径 1 处：C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card
 ```
 
 ### 114. 11:38:35Z · 同一次操作的第 2 次询问
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card 进行写入文件 [ 写入 ]（同一次操作的第 2 个审批请求）
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card 进行写入文件 [ 写入 ]（同一次操作的第 2 个审批请求）
 ```
 
 ### 115. 11:51:57Z
@@ -891,19 +891,19 @@ try { takeown /f $p *>$null; icacls $p /grant "Administrators:F" *>$null; Remove
 ### 117. 11:52:38Z
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card\.activity.log、C:\Users\Administrator\.dsh\auto-approve\audit.log 进行查找或读取 [ 读取 ]
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card\.activity.log、C:\Users\<user>\.dsh\auto-approve\audit.log 进行查找或读取 [ 读取 ]
 ```
 
 ### 118. 11:52:41Z · 同一次操作的第 2 次询问
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card\.activity.log、C:\Users\Administrator\.dsh\auto-approve\audit.log 进行查找或读取 [ 读取 ]（同一次操作的第 2 个审批请求）
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card\.activity.log、C:\Users\<user>\.dsh\auto-approve\audit.log 进行查找或读取 [ 读取 ]（同一次操作的第 2 个审批请求）
 ```
 
 ### 119. 11:52:55Z
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card 进行查找或读取 [ 读取 ]
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card 进行查找或读取 [ 读取 ]
 理由：查看 DSH_HOME 下插件日志格式化逻辑。
 目标：工作区外
 影响：整机（工作区外任意路径可读写，含系统位置；改动不可自动回滚）
@@ -912,57 +912,57 @@ try { takeown /f $p *>$null; icacls $p /grant "Administrators:F" *>$null; Remove
 ### 120. 11:53:19Z
 
 ```
-对 C:\Users\Administrator\.dsh\auto-approve\events.jsonl 进行查找或读取 [ 读取 ]
+对 C:\Users\<user>\.dsh\auto-approve\events.jsonl 进行查找或读取 [ 读取 ]
 目标含工作区外路径 1 处（就是上面那个）
 ```
 
 ### 121. 11:53:27Z · 同一次操作的第 2 次询问
 
 ```
-对 C:\Users\Administrator\.dsh\auto-approve\events.jsonl 进行查找或读取 [ 读取 ]（同一次操作的第 2 个审批请求）
+对 C:\Users\<user>\.dsh\auto-approve\events.jsonl 进行查找或读取 [ 读取 ]（同一次操作的第 2 个审批请求）
 ```
 
 ### 122. 11:53:40Z
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card 进行查找或读取 [ 读取 ]
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card 进行查找或读取 [ 读取 ]
 目标：工作区外
 拦截：递归删除：命令会递归删除目录，不可回滚
-原因：目标含工作区外路径 1 处：C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card
+原因：目标含工作区外路径 1 处：C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card
 ```
 
 ### 123. 11:54:18Z · 同一次操作的第 2 次询问
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card 进行查找或读取 [ 读取 ]（同一次操作的第 2 个审批请求）
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card 进行查找或读取 [ 读取 ]（同一次操作的第 2 个审批请求）
 ```
 
 ### 124. 11:54:24Z
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card 进行查找或读取 [ 读取 ]
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card 进行查找或读取 [ 读取 ]
 目标：工作区外
 拦截：递归删除：命令会递归删除目录，不可回滚
-原因：目标含工作区外路径 1 处：C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card
+原因：目标含工作区外路径 1 处：C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card
 ```
 
 ### 125. 11:54:58Z · 同一次操作的第 2 次询问
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card 进行查找或读取 [ 读取 ]（同一次操作的第 2 个审批请求）
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card 进行查找或读取 [ 读取 ]（同一次操作的第 2 个审批请求）
 ```
 
 ### 126. 11:55:14Z
 
 ```
-对 C:\Users\Administrator\.dsh\auto-approve\events.jsonl 进行查找或读取 [ 读取 ]
+对 C:\Users\<user>\.dsh\auto-approve\events.jsonl 进行查找或读取 [ 读取 ]
 目标含工作区外路径 1 处（就是上面那个）
 ```
 
 ### 127. 11:55:46Z · 同一次操作的第 2 次询问
 
 ```
-对 C:\Users\Administrator\.dsh\auto-approve\events.jsonl 进行查找或读取 [ 读取 ]（同一次操作的第 2 个审批请求）
+对 C:\Users\<user>\.dsh\auto-approve\events.jsonl 进行查找或读取 [ 读取 ]（同一次操作的第 2 个审批请求）
 ```
 
 ### 128. 11:56:51Z
@@ -979,28 +979,28 @@ trace(`diag: 读取 displayReason 失败 ${error?.message ?? error}`)
 if (-not $t.Contains($old)) { Write-Host 'anchor not found'; exit 1 }
 $t.Replace($old, $new) | Set-Content src/index.mjs -NoNewline -Encoding utf8
 node --check src/index.mjs; Write-Host "check=$LASTEXITCODE"
-原因：目标含工作区外路径 1 处：C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card
+原因：目标含工作区外路径 1 处：C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card
 ```
 
 ### 129. 11:58:37Z
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card 进行写入文件 [ 写入 ]
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card 进行写入文件 [ 写入 ]
 目标：工作区外
 拦截：递归删除：命令会递归删除目录，不可回滚
-原因：目标含工作区外路径 1 处：C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card
+原因：目标含工作区外路径 1 处：C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card
 ```
 
 ### 130. 11:58:48Z · 同一次操作的第 2 次询问
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card 进行写入文件 [ 写入 ]（同一次操作的第 2 个审批请求）
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card 进行写入文件 [ 写入 ]（同一次操作的第 2 个审批请求）
 ```
 
 ### 131. 11:59:21Z · 同一次操作的第 2 次询问
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card\README.md、C:\Windows\Temp\dsh-card-a.txt、C:\Users\Public\dsh-card-b.txt、C:\tmp\dsh-card-c.txt、D:\DeepSeek Harness工作目录\DeepSeek\docs\devlog\2026-11.md 进行写入文件 [ 写入 ]
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card\README.md、C:\Windows\Temp\dsh-card-a.txt、C:\Users\Public\dsh-card-b.txt、C:\tmp\dsh-card-c.txt、D:\DeepSeek Harness工作目录\DeepSeek\docs\devlog\2026-11.md 进行写入文件 [ 写入 ]
 理由：…` 整条消失），而处理器这时**不一定拿得到** `displayReason`。
 结果那张卡只剩首行 —— `权限：` 和 `理由：` 都没了。
 模式其实一直摆在工具参数里：提权请求必然来自一次带 `sandbox_permissions` 的调用。
@@ -1036,20 +1036,20 @@ rewrite: 对 C:\Windows\Temp\dsh-card-a.txt、…、C:\tmp\dsh-card-c.txt 进行
 '@
 ((Get-Content $d -Raw).TrimEnd() + $entry) | Set-Content $d -NoNewline -Encoding utf8
 Write-Host "readme=$((Get-Item $p).Length) devlog=$((Get-Item $d).Length)"
-原因：目标含工作区外路径 4 处：C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card\README.md , C:\Windows\Temp\dsh-card-a.txt、C:\Users\Public\dsh-card-b.txt、C:\tmp\dsh-card-c.txt , D:\DeepSeek
+原因：目标含工作区外路径 4 处：C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card\README.md , C:\Windows\Temp\dsh-card-a.txt、C:\Users\Public\dsh-card-b.txt、C:\tmp\dsh-card-c.txt , D:\DeepSeek
 ```
 
 ### 132. 11:59:58Z · 同一次操作的第 2 次询问
 
 ```
-对 C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card\README.md、C:\Windows\Temp\dsh-card-a.txt、C:\Users\Public\dsh-card-b.txt、C:\tmp\dsh-card-c.txt、D:\DeepSeek Harness工作目录\DeepSeek\docs\devlog\2026-11.md 进行写入文件 [ 写入 ]（同一次操作的第 2 个审批请求）
+对 C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card\README.md、C:\Windows\Temp\dsh-card-a.txt、C:\Users\Public\dsh-card-b.txt、C:\tmp\dsh-card-c.txt、D:\DeepSeek Harness工作目录\DeepSeek\docs\devlog\2026-11.md 进行写入文件 [ 写入 ]（同一次操作的第 2 个审批请求）
 ```
 
 ### 133. 13:30:33Z
 
 ```
 对 当前工作目录 D:\DeepSeek Harness工作目录\DeepSeek 进行调用工具 [ 执行 ]
-目标含工作区外路径 4 处：C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card\src\text.mjs、C:\Windows\Temp\dsh-card-a.txt、C:\Users\Public\dsh-card-b.txt、C:\tmp\dsh-card-c.txt
+目标含工作区外路径 4 处：C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card\src\text.mjs、C:\Windows\Temp\dsh-card-a.txt、C:\Users\Public\dsh-card-b.txt、C:\tmp\dsh-card-c.txt
 ```
 
 ## 统计
@@ -1082,6 +1082,6 @@ Write-Host "readme=$((Get-Item $p).Length) devlog=$((Get-Item $d).Length)"
 - `10:53:54Z` **目标退化成工作目录** — 当前工作目录 D:\DeepSeek Harness工作目录\DeepSeek
 - `11:03:22Z` **目标退化成工作目录** — 当前工作目录 D:\DeepSeek Harness工作目录\DeepSeek
 - `11:56:51Z` **目标是正则/代码片段** — /\s+/g
-- `11:59:21Z` **目标过长（220 字符）** — C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card\README.md、C:\Windows\Temp\dsh-card-a.tx
-- `11:59:58Z` **目标过长（220 字符）** — C:\Users\Administrator\.dsh\profiles\desktop\plugins\dsh-approval-card\README.md、C:\Windows\Temp\dsh-card-a.tx
+- `11:59:21Z` **目标过长（220 字符）** — C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card\README.md、C:\Windows\Temp\dsh-card-a.tx
+- `11:59:58Z` **目标过长（220 字符）** — C:\Users\<user>\.dsh\profiles\desktop\plugins\dsh-approval-card\README.md、C:\Windows\Temp\dsh-card-a.tx
 - `13:30:33Z` **目标退化成工作目录** — 当前工作目录 D:\DeepSeek Harness工作目录\DeepSeek

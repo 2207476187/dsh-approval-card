@@ -4,7 +4,7 @@
  *
  * 跑：node probes/probe-handler.mjs
  */
-import plugin from 'file:///C:/Users/Administrator/.dsh/profiles/desktop/plugins/dsh-approval-card/src/index.mjs'
+import plugin from 'file:///C:/Users/<user>/.dsh/profiles/desktop/plugins/dsh-approval-card/src/index.mjs'
 
 let handler = null
 let registered = null
