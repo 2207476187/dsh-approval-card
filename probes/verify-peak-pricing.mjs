@@ -1,5 +1,5 @@
 /**
- * 校验峰谷计价：按每一轮自己的时间戳取价，再与会话日志、真实账本对账。
+ * 用插件自己的计价函数对账：分时（工作日 9-12/14-18 = 高峰×2）vs 账本。
  * 用法：node probes/verify-peak-pricing.mjs <session.v4.jsonl.zstd>
  */
 import { readFileSync } from 'node:fs'
@@ -38,10 +38,8 @@ for (const line of raw.split('\n')) {
 	if (event.type !== 'assistant/message' && event.type !== 'assistant/attempt' && event.type !== 'turn/end') continue
 	const usage = event.data?.tokenUsage ?? event.data?.usage
 	if (usage === undefined || usage === null) continue
-	const key = `${event.data?.turn ?? event.turn ?? 0}:${event.data?.step ?? event.step ?? 0}`
-	const at = Number(event.time ?? event.data?.time ?? 0) || 0
-	samples.set(key, {
-		at,
+	samples.set(`${event.data?.turn ?? event.turn ?? 0}:${event.data?.step ?? event.step ?? 0}`, {
+		at: Number(event.time ?? event.data?.time ?? 0) || 0,
 		uncachedInputTokens: usage.uncachedInputTokens ?? usage.inputTokens ?? 0,
 		cacheReadTokens: usage.cacheReadTokens ?? 0,
 		cacheWriteTokens: usage.cacheWriteTokens ?? 0,
@@ -68,35 +66,37 @@ globalThis.window = {
 	}
 }
 await import(pathToFileURL(`${process.env.DSH_HOME}/profiles/desktop/plugins/dsh-usage-cost/client.js`).href)
-const { costOf, priceAt, offPeakAt, ACTIVE } = captured.__test
+const { costOf, priceAt, isPeakAt, ACTIVE } = captured.__test
 
 let total = 0
-let peakOnly = 0
+let allPeak = 0
 let tokens = 0
-let offPeakTokens = 0
-let stamped = 0
+let idleTokens = 0
+let peakTurns = 0
 const byDay = new Map()
 for (const sample of samples.values()) {
-	const used = sample.uncachedInputTokens + sample.cacheReadTokens + sample.cacheWriteTokens + sample.outputTokens
+	const used =
+		sample.uncachedInputTokens + sample.cacheReadTokens + sample.cacheWriteTokens + sample.outputTokens
 	if (used === 0) continue
 	tokens += used
-	if (offPeakAt(sample.at)) offPeakTokens += used
-	if (sample.at > 0) stamped += 1
-	const price = priceAt(sample.at)
-	total += costOf(sample, price).total
-	peakOnly += costOf(sample, ACTIVE).total
-	const day = sample.at > 0 ? new Date(sample.at).toLocaleDateString('sv-SE') : 'unknown'
-	byDay.set(day, (byDay.get(day) ?? 0) + costOf(sample, price).total)
+	const peak = isPeakAt(sample.at)
+	if (!peak) idleTokens += used
+	else peakTurns += 1
+	const cost = costOf(sample, priceAt(sample.at)).total
+	total += cost
+	allPeak += costOf(sample, { ...ACTIVE, input: ACTIVE.input * 2, cacheRead: ACTIVE.cacheRead * 2, cacheWrite: ACTIVE.cacheWrite * 2, output: ACTIVE.output * 2 }).total
+	const day = new Date(sample.at + 8 * 3600_000).toISOString().slice(0, 10)
+	byDay.set(day, (byDay.get(day) ?? 0) + cost)
 }
 
-console.log(`样本 ${samples.size} 条，其中带时间戳 ${stamped} 条`)
-console.log(`tokens=${tokens}（谷段 ${offPeakTokens}，占 ${((offPeakTokens / tokens) * 100).toFixed(1)}%）`)
-console.log(`峰谷分时计价 ¥${total.toFixed(4)}`)
-console.log(`全按峰段计价 ¥${peakOnly.toFixed(4)}（差 ${(((peakOnly - total) / total) * 100).toFixed(1)}%）`)
-console.log('按天：')
-for (const [day, value] of [...byDay].sort()) console.log(`  ${day}  ¥${value.toFixed(4)}`)
+console.log(`样本 ${samples.size}，计费 ${peakTurns} 条落在高峰`)
+console.log(`tokens=${tokens}（空闲 ${((idleTokens / tokens) * 100).toFixed(1)}%）`)
+console.log(`分时计价 ¥${total.toFixed(4)}   全按高峰 ¥${allPeak.toFixed(4)}`)
 
 const ledger = JSON.parse(readFileSync(`${process.env.USERPROFILE}/.dsh/.dshw-usage.json`, 'utf8'))
-console.log('账本按天：')
-for (const [day, value] of Object.entries(ledger.history ?? {}).sort()) console.log(`  ${day}  ¥${Number(value).toFixed(4)}`)
-console.log(`账本余额 ¥${ledger.lastBalance}`)
+console.log('\n日期         本插件     账本      差额')
+for (const [day, value] of [...byDay].sort()) {
+	const expected = Number(ledger.history?.[day] ?? 0)
+	console.log(`${day}  ¥${value.toFixed(4)}  ¥${expected.toFixed(4)}  ${(((value - expected) / expected) * 100).toFixed(1)}%`)
+}
+console.log(`\n账本余额 ¥${ledger.lastBalance}`)
