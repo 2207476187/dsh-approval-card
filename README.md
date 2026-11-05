@@ -2,7 +2,7 @@
 
 DeepSeek Harness 的审批卡一直是「一张卡只有一个短路径」——看不到这次到底要动哪个文件、哪条命令、目标在不在工作区里。这个仓库装两样东西：
 
-1. `plugin/` —— 一个 Cordis 插件，在卡片顶部给出**精确目标**（完整路径 / 完整命令行）与操作分类，并保留下游的拦截理由；
+1. [dsh-approval-card-plugin](https://github.com/2207476187/dsh-approval-card-plugin) —— 一个 Cordis 插件，在卡片顶部给出**精确目标**（完整路径 / 完整命令行）与操作分类，并保留下游的拦截理由；
 2. `tools/patch-approval-gate.mjs` —— 给 `dsh-approval-gate` 打的一个本地补丁，修掉「工作区路径含空格就被判成工作区外」的 bug（否则每次 `write`/`edit` 都要点一次审批）。
 
 两者互相独立：不打补丁，卡片文案照样更清楚；打补丁，审批次数才是真的降下来。
@@ -10,8 +10,6 @@ DeepSeek Harness 的审批卡一直是「一张卡只有一个短路径」——
 ## 目录
 
 ```
-plugin/          插件本体（Cordis 服务端 + 浏览器端 client.js + 单元测试）
-                 独立仓库：https://github.com/2207476187/dsh-approval-card-plugin
 tools/           patch-approval-gate.mjs：审批门路径截断补丁（幂等，可 --status/--dry-run）
 docs/adr/        两个决策记录：为什么写插件、为什么打补丁而不是关开关
 docs/devlog/     过程记录：怎么定位到审批门、多帧 zstd 取证、每一轮修了什么
@@ -20,17 +18,14 @@ probes/          取证脚本：回放历史会话、检查入口行为、复现
 logs/            原始报错（文档里按 路径:行号 引用）
 ```
 
+插件源码不在本仓库，见下面的「两个仓库」。
+
 ## 两个仓库
 
-- **`dsh-approval-card-plugin`** —— 插件源码，仓库根目录就是包根（`package.json` / `src/` / `client.js` / `locale/`），可以直接当插件仓库装；
-- **本仓库** —— 插件快照 + 补丁脚本 + 取证与文档。`plugin/` 是同一份源码的副本。
+- **[dsh-approval-card-plugin](https://github.com/2207476187/dsh-approval-card-plugin)** —— 插件源码，仓库根目录就是包根（`package.json` / `src/` / `client.js` / `locale/` / `test/`），可以直接当插件仓库装；
+- **本仓库** —— 补丁脚本 + 取证脚本 + 决策与过程记录，回答「为什么这么做」。
 
-同步方式（改完插件后）：
-
-```powershell
-robocopy plugin .build\plugin-repo /MIR /XD .git
-cd .build\plugin-repo; git add -A; git commit -m "feat: …"; git push
-```
+本仓库不再放插件源码副本：同一份代码在三个地方各存一份，同步全靠手工，已经出过把清洗过的路径覆盖回去的事故。要改插件就改插件仓库。
 
 
 ## 插件做了什么
@@ -53,7 +48,7 @@ cd .build\plugin-repo; git add -A; git commit -m "feat: …"; git push
 
 插件按 profile bundle 登记，不写在 `cordis.patch.yml` 的 `insert` 里（那样会挂两遍）：
 
-1. 把 `plugin/` 放到 `%DSH_HOME%\profiles\desktop\plugins\dsh-approval-card\`
+1. 从 [插件仓库](https://github.com/2207476187/dsh-approval-card-plugin) 取源码，放到 `%DSH_HOME%\profiles\desktop\plugins\dsh-approval-card\`（`git clone` 或 `dsh plugin add`）
 2. `profiles\desktop\package.json`：`dependencies` 加 `"dsh-approval-card": "file:plugins/dsh-approval-card"`，同时把 `"dsh-approval-card"` 加进 `dsh.profile.bundles`
 3. `node_modules` 下建 junction 指向上面的目录（pnpm 装不动时用这个顶替）：
    `New-Item -ItemType Junction -Path …\node_modules\dsh-approval-card -Target …\plugins\dsh-approval-card`
