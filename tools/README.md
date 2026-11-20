@@ -14,7 +14,20 @@
 | `restart-dsh.ps1` / `restart-dsh.cmd` | 不依赖任何补丁重启 DeepSeek Harness：`CloseMainWindow` → 超时强杀 → 重新启动 | 手工双击 |
 | `port-menu-restart.ps1` / `.cmd` | 把「菜单重启按钮」外壳补丁移植进 asar 时代的安装树：解包 `app.asar` → 改名成 `.bak` → 部署补丁 → 校验 → 启动。幂等，更新后重跑即可 | 手工双击 `port-menu-restart.cmd` |
 | `rollback-menu-restart.cmd` | 反向操作：`app.asar.bak` 改回 `app.asar` → 删掉解包目录 → 重启 | 手工双击 |
+| `restore-loader.ps1` / `restore-loader.cmd` | 把 `resources\app\lib\main.js` 换回菜单重启加载器：优先挑 `main.js.bak-*-before-purge`，没有就退 `before-menu-restart`，再退 `main.official.js` | 手工双击（purge 把加载器改坏时用） |
 | `patch-approval-gate.mjs` | 给 `dsh-approval-gate` 打本地补丁（结构化字段 `file_path` 不再被空白截断），幂等，审批门更新后重跑 | 手工：`node patch-approval-gate.mjs --status` |
+
+## 更新 DSH 之后，顺序不能反
+
+安装器会把整个 `resources\app` 换成官方原版，**两件事都要重做，而且有先后**：
+
+1. **先跑 `port-menu-restart.cmd`** —— 把 `app.asar` 解包、改名成 `.bak`、把菜单重启补丁装回去（`lib\main.js` 变成 1 KB 加载器 + `main.official.js`）。
+2. **再点 purge 的「应用」** —— purge 只会按官方单体去改 `resources\app\lib\main.js`。
+
+反过来的后果：purge 先把它认得的官方单体改完，`port-menu-restart` 再把 `main.js` 整体替换成加载器，purge 那 50 条补丁里针对 `main.js` 的部分就白打了（而且 purge 的 `applied.json` 仍记着「已应用」，不会重打）。
+反顺序还能接受的情形只有一种：purge 那一轮的目标文件里没有 `lib\main.js`（`skip` 掉）。但别指望每次都这样。
+
+装完补丁后，加载器只在外壳里追加菜单项，`main.official.js` 保留官方原件；purge 认不出的锚点会 `skipped`，不会把加载器改坏——但**备份仍然要先做**（`restore-loader.cmd` 就是兜底）。
 
 ## 哪些不进仓库
 
@@ -23,7 +36,7 @@
 ## 已知的散落点
 
 - `port-menu-restart.ps1` 里的真实移植脚本在 `D:\DeepSeek Harness工作目录\WorkBuddy AI\02_菜单重启按钮\port-menu-restart.ps1`（补丁工程本体），本目录这份只是包装器。
-- 计划任务 `IDM Trial Reset` 目前仍指向 `C:\Users\Administrator\bin\idm-trial-reset.ps1`（一个转发脚本，因为改任务需要管理员权限）。等用管理员身份跑一次重指向后，那个转发脚本可以删掉，任务直接指向本目录。
+- 计划任务 `IDM Trial Reset` 已指向本目录的 `idm-trial-reset.ps1`（`-Auto -Deep`），`C:\Users\Administrator\bin` 下不再需要转发脚本。
 
 ## 为什么不留一份在 PATH 目录
 
