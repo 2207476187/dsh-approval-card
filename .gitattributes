@@ -1,0 +1,29 @@
+# 行尾统一由这里裁决，不看每个人的 core.autocrlf。
+#
+# 背景：core.autocrlf=true 时，仓库里的 .ps1 会在 checkout 时被改成 CRLF，
+# 于是「本地能跑、别人拉下来报错」的差异没人看得见。显式钉死更省事。
+
+* text=auto
+
+# Node / Markdown / JSON / PowerShell：一律 LF。
+# Windows PowerShell 5.1 用 LF 完全正常（这几个脚本一直在 LF 下跑）。
+*.mjs     text eol=lf
+*.js      text eol=lf
+*.md      text eol=lf
+*.json    text eol=lf
+*.ps1     text eol=lf
+*.yml     text eol=lf
+*.yaml    text eol=lf
+.gitignore text eol=lf
+.gitattributes text eol=lf
+
+# cmd.exe 对 LF 容错但 goto/label 会出怪问题，坚持 CRLF。
+*.cmd     text eol=crlf
+*.bat     text eol=crlf
+
+# 二进制：不要碰。
+*.png     binary
+*.ico     binary
+*.zip     binary
+*.asar    binary
+*.bak     binary
