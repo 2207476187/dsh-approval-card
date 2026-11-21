@@ -16,6 +16,7 @@
 | `rollback-menu-restart.cmd` | 反向操作：`app.asar.bak` 改回 `app.asar` → 删掉解包目录 → 重启 | 手工双击 |
 | `restore-loader.ps1` / `restore-loader.cmd` | 把 `resources\app\lib\main.js` 换回菜单重启加载器：优先挑 `main.js.bak-*-before-purge`，没有就退 `before-menu-restart`，再退 `main.official.js` | 手工双击（purge 把加载器改坏时用） |
 | `patch-approval-gate.mjs` | 给 `dsh-approval-gate` 打本地补丁（结构化字段 `file_path` 不再被空白截断），幂等，审批门更新后重跑 | 手工：`node patch-approval-gate.mjs --status` |
+| `fix-python-path.ps1` | 从**机器级** PATH 删掉指向 `Python313` 的条目（Windows 机器级在前、用户级在后，前者会盖住后者里的新 Python）。自动备份并打印还原命令，保持 `REG_EXPAND_SZ`、广播 `WM_SETTINGCHANGE` | 手工：`-DryRun` 看变更 → 直接跑（自提权）→ `-Restore` 还原 |
 
 ## 更新 DSH 之后，顺序不能反
 
