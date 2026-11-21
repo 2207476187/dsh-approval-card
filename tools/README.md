@@ -17,6 +17,8 @@
 | `restore-loader.ps1` / `restore-loader.cmd` | 把 `resources\app\lib\main.js` 换回菜单重启加载器：优先挑 `main.js.bak-*-before-purge`，没有就退 `before-menu-restart`，再退 `main.official.js` | 手工双击（purge 把加载器改坏时用） |
 | `patch-approval-gate.mjs` | 给 `dsh-approval-gate` 打本地补丁（结构化字段 `file_path` 不再被空白截断），幂等，审批门更新后重跑 | 手工：`node patch-approval-gate.mjs --status` |
 | `fix-python-path.ps1` | 从**机器级** PATH 删掉指向 `Python313` 的条目（Windows 机器级在前、用户级在后，前者会盖住后者里的新 Python）。自动备份并打印还原命令，保持 `REG_EXPAND_SZ`、广播 `WM_SETTINGCHANGE` | 手工：`-DryRun` 看变更 → 直接跑（自提权）→ `-Restore` 还原 |
+| `install-skill-from-github.mjs` | 从 GitHub 仓库的一个目录装成 DSH skill：走 `gh api` 读 tree → 逐文件 raw 下载 → 静态扫描 8 类可疑模式 → 算每个文件 sha256。目标目录已存在即拒绝（不覆盖手改过的 skill），命中可疑内容退出码 2 但不自动删 | 手工：`node install-skill-from-github.mjs <owner/repo> <远端目录> <本地名> [--dry-run] [--json]` |
+| `update-our-free-model.mjs` | 按作者 feed 清单把 `dsh-our-free-model` 升到最新（校验 size+sha256，整目录先备份）。npm 上的 latest 停在 2.1.0，真正的更新只走作者的 GitHub feed | 手工：`node --use-system-ca update-our-free-model.mjs --dry-run` |
 
 ## 更新 DSH 之后，顺序不能反
 

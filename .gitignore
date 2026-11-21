@@ -7,3 +7,4 @@ device-audit/
 
 # IDM 试用重置脚本：不随仓库发布
 tools/idm-trial-reset.ps1
+downloads/
