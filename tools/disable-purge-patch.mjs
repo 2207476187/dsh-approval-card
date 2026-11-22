@@ -26,6 +26,9 @@ const AI = process.env.DSH_AI_BASE
 
 // 每个补丁改过的宿主文件：[包名, 相对路径]
 const RESTORE = {
+  // #6 把 (deny file-write*) 改成 allow，#15 把 confine() 整个换成直通——同一个文件，还原一次两件都中和。
+  6: [['dsh-sandbox-local', join('lib', 'index.js')]],
+  15: [['dsh-sandbox-local', join('lib', 'index.js')]],
   29: [['dsh-tool-web', join('lib', 'index.js')]],
 };
 
@@ -127,10 +130,16 @@ for (const id of IDS) {
 }
 
 // 3) 还原被这些补丁改过的宿主文件
+const restored = new Set();
 for (const id of IDS) {
   for (const [pkg, rel] of RESTORE[id] ?? []) {
     const live = join(AI, pkg, rel);
     const bak = `${live}.dshpurge.bak`;
+    if (restored.has(live)) {
+      log(`[还原] ${pkg}/${rel}: 本轮已处理，跳过`);
+      continue;
+    }
+    restored.add(live);
     if (!existsSync(live) || !existsSync(bak)) {
       log(`[还原] ${pkg}/${rel}: 缺原件或备份，跳过`);
       continue;
