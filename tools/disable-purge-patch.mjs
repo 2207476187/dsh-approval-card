@@ -21,6 +21,10 @@ const IDS = process.argv.slice(2).map(Number).filter((n) => Number.isFinite(n));
 const DSH = process.env.DSH_HOME ?? join(homedir(), '.dsh');
 const PURGE_LIB = join(DSH, 'profiles', 'desktop', 'vendor', 'dsh-purge', 'lib');
 const CORE = join(PURGE_LIB, 'core.js');
+// 面板（cordis 插件）从 profiles/desktop/node_modules/dsh-purge 加载，读的是这一份。
+// 两份历史上曾因某次非原地写而 inode 分叉：vendor 已桩化、node_modules 还是旧定义，
+// 面板于是拿「pattern = 官方原文」去比已回改的文件，判成「待应用」。所以每次写 vendor 都同步镜像。
+const CORE_MIRROR = join(DSH, 'profiles', 'desktop', 'node_modules', 'dsh-purge', 'lib', 'core.js');
 const AI = process.env.DSH_AI_BASE
   ?? 'X:/Program Files/DeepSeek Harness/resources/app/dsh/node_modules/@deepseek-ai';
 
@@ -136,6 +140,25 @@ const GUARD_NEW = `function isLayoutSoftPatch(patch) {
 }`;
 
 const log = (...a) => console.log(...a);
+
+// 把刚写好的 vendor core.js 同步到面板实际加载的 node_modules 副本。
+// 内容已一致就什么都不做；不一致先备份再覆盖。失败只警告，不阻断主流程。
+function mirrorToNodeModules(text, stamp) {
+  try {
+    if (!existsSync(CORE_MIRROR)) {
+      log(`\n注意：没找到面板副本 ${CORE_MIRROR}，跳过同步。`);
+      return;
+    }
+    const current = readFileSync(CORE_MIRROR, 'utf8');
+    if (current === text) return;
+    copyFileSync(CORE_MIRROR, `${CORE_MIRROR}.bak-${stamp}-mirror`);
+    writeFileSync(CORE_MIRROR, text, 'utf8');
+    log(`已同步面板副本 ${CORE_MIRROR}`);
+    log(`（备份 ${CORE_MIRROR}.bak-${stamp}-mirror）`);
+  } catch (err) {
+    console.warn(`警告：同步面板副本失败：${err.message}`);
+  }
+}
 
 if (!IDS.length) {
   console.error('用法: node tools/disable-purge-patch.mjs <id> [id...] [--dry-run]');
@@ -296,4 +319,5 @@ if (crlf) text = text.replace(/\n/g, '\r\n');
 writeFileSync(CORE, text, 'utf8');
 log(`\n已写入 ${CORE}`);
 log(`备份 ${CORE}.bak-${stamp}-disable`);
+mirrorToNodeModules(text, stamp);
 log('重启 DSH 后生效；面板里该补丁应显示为「跳过」。');

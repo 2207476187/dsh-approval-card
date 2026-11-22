@@ -93,4 +93,14 @@ if (crlf) text = text.replace(/\n/g, '\r\n');
 writeFileSync(CORE, text, 'utf8');
 console.log(`\n已写入 ${CORE}`);
 console.log(`备份 ${CORE}.bak-${stamp}-disabled-skip`);
+// 面板从 profiles/desktop/node_modules 加载，两份必须同步，否则面板按旧定义判状态。
+const CORE_MIRROR = join(DSH, 'profiles', 'desktop', 'node_modules', 'dsh-purge', 'lib', 'core.js');
+if (existsSync(CORE_MIRROR)) {
+  const cur = readFileSync(CORE_MIRROR, 'utf8');
+  if (cur !== text) {
+    copyFileSync(CORE_MIRROR, `${CORE_MIRROR}.bak-${stamp}-mirror`);
+    writeFileSync(CORE_MIRROR, text, 'utf8');
+    console.log(`已同步面板副本 ${CORE_MIRROR}`);
+  }
+}
 console.log('重启 DSH 后生效；之后点「应用」不会再有停用补丁被重新打上。');

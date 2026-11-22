@@ -47,6 +47,19 @@ node tools\purge-skip-disabled.mjs                   # 让「应用」认得 dis
 
 顺序不能反：先有桩，短路才有东西可跳。做完再点「应用」就是安全的，停用项会一直显示 `skipped`。
 
+### core.js 有两份，脚本会自己同步
+
+`profiles\desktop` 下同时存在 `vendor\dsh-purge\lib\core.js`（脚本改的）和 `node_modules\dsh-purge\lib\core.js`（**面板实际加载的**）。两者不是硬链接，会各自分叉——2026-11-22 就因为面板那份还是旧定义（`#33`/`#48` 的 pattern 指向官方原文），把已回改的宿主文件判成「待应用」。
+
+现在 `disable-purge-patch.mjs` 与 `purge-skip-disabled.mjs` 写完 vendor 都会比对并覆盖 `node_modules` 副本（备份 `<file>.bak-<stamp>-mirror`）。**手工改 `core.js` 时没有这层保护**，改完要自己镜像一次，否则面板与脚本会给出两个答案。核对命令：
+
+```powershell
+(Get-FileHash 'C:\Users\Administrator\.dsh\profiles\desktop\vendor\dsh-purge\lib\core.js').Hash
+(Get-FileHash 'C:\Users\Administrator\.dsh\profiles\desktop\node_modules\dsh-purge\lib\core.js').Hash
+```
+
+两个哈希相同才算同步。改完仍需重启 DSH，面板才会重新加载这个模块。
+
 ### 保留项：`#1` 不在停用清单里
 
 `#1` `WORKSPACE_CONTEXT_INTRO` 是**刻意保持生效**的（需求：工作区 AGENTS.md 要"无条件执行"，见 `docs/adr/0009`），所以它不出现在上面的重放命令里，也不该被加进去。
