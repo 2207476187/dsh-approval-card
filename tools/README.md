@@ -47,6 +47,20 @@ node tools\purge-skip-disabled.mjs                   # 让「应用」认得 dis
 
 顺序不能反：先有桩，短路才有东西可跳。做完再点「应用」就是安全的，停用项会一直显示 `skipped`。
 
+### 保留项：`#1` 不在停用清单里
+
+`#1` `WORKSPACE_CONTEXT_INTRO` 是**刻意保持生效**的（需求：工作区 AGENTS.md 要"无条件执行"，见 `docs/adr/0009`），所以它不出现在上面的重放命令里，也不该被加进去。
+
+它的 `.dshpurge.bak` 是脏的（备份抓取晚于首次修改，L124/L125 与 live 逐字相同），`RESTORE` 还原不了它 —— 官方原文和手工回退步骤在 `docs/purge-official-agent-instructions.md`。
+
+purge 升级后验证一条就够：
+
+```powershell
+Select-String -Path 'X:\Program Files\DeepSeek Harness\resources\app\dsh\node_modules\@deepseek-ai\dsh-agent-instructions\lib\index.js' -Pattern 'AGENT_INSTRUCTIONS_INTRO = "The following instructions are ACTIVE'
+```
+
+有命中 = 仍生效。没命中就点一次 purge「应用」。它带 `skipIfMarked: true`，因为 `STRONG_*_V2` 是 `STRONG_*` 的前缀，不设这个守卫每次 apply 都会再叠一层（实测 +841 字符/次，永不收敛）。
+
 ## 哪些不进仓库
 
 `idm-trial-reset.ps1` 写在 `.gitignore` 里（`tools/idm-trial-reset.ps1`）：它只在本机跑，不适合随公开仓库发布。删掉本目录其它文件后，这一个仍需手工放回。
