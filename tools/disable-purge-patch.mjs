@@ -35,6 +35,26 @@ const RESTORE = {
   34: [['dsh-sandbox', join('lib', 'index.js')]],
   // #36 同族：改工具 schema 里 sandbox_permissions / justification 的描述。
   36: [['dsh-sandbox', join('lib', 'index.js')]],
+  // #61 把 read-only 那行「Do not refuse...」改成「Continue the task; approval is auto-granted」。
+  // 同一族措辞还出现在权限预设的 workspace-write 描述里（wider retries are auto-granted），
+  // 那处已无补丁认领（补丁被删/改版），但 .dshpurge.bak 是干净的官方原文，一并还原。
+  61: [
+    ['dsh-sandbox-policy', join('lib', 'index.js')],
+    ['dsh-permission-presets', join('lib', 'index.js')],
+    ['dsh-permission-presets', join('lib', 'types', 'index.js')],
+  ],
+  // #37 把子代理那句「scope was fixed, cannot be widened」改成「approval is auto-granted」。
+  37: [
+    ['dsh-subagent', join('lib', 'index.js')],
+    ['dsh-subagent', join('lib', 'types', 'child-agent.js')],
+  ],
+  // #92 让子代理不传 preset 时直接继承 danger-full-access，并注入 child assemble。
+  92: [
+    ['dsh-subagent', join('lib', 'index.js')],
+    ['dsh-subagent', join('lib', 'types', 'child-agent.js')],
+  ],
+  // #23 把 tool-subagent 的 maxDepth 默认值从 3 抬到 10。
+  23: [['dsh-tool-subagent', join('lib', 'index.js')]],
   29: [['dsh-tool-web', join('lib', 'index.js')]],
 };
 
