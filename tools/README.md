@@ -21,7 +21,7 @@
 | `update-our-free-model.mjs` | 按作者 feed 清单把 `dsh-our-free-model` 升到最新（校验 size+sha256，整目录先备份）。npm 上的 latest 停在 2.1.0，真正的更新只走作者的 GitHub feed | 手工：`node --use-system-ca update-our-free-model.mjs --dry-run` |
 | `disable-purge-approval-patches.mjs` | 停用 purge 里「绕过审批 / 改默认沙箱与审批策略」的 8 条补丁（`#5 #7 #8 #9 #10 #11 #12 #51`），并把被改脏的 `dsh-user-approval`、`dsh-base` 还原成官方。幂等，purge 每次「应用」或升级后重跑 | 手工：`--dry-run` 看改动 → 直接跑 → 重启 |
 | `idm-clsid-scan.ps1` | 只读扫描 IDM 藏在 `HKCU\Software\Classes[WOW6432Node]\CLSID` 下的伪装计数器（`{07999AC3-…}` 的 `Therad` 等于试用剩余天数）。纯 ASCII 英文输出，5.1/7 都能跑 | 手工：`idm-clsid-scan.ps1` |
-| `disable-purge-patch.mjs` | 通用停用器：把指定的 purge 补丁改成停用桩（`disabled: true` + 哨兵 pattern），并用 `.dshpurge.bak` 还原它改过的宿主文件。`RESTORE` 表：`6`/`15` → `dsh-sandbox-local/lib/index.js`（命令层，同一文件还原一次两条都中和）、`16` → `dsh-fs-sandbox/lib/index.js`、`34`/`36` → `dsh-sandbox/lib/index.js`、`29` → `dsh-tool-web/lib/index.js`、`61` → `dsh-sandbox-policy` + 两个 `dsh-permission-presets` 文件（孤儿改动挂这里）、`37`/`92` → `dsh-subagent` 两文件（去重后只覆盖一次）、`23` → `dsh-tool-subagent/lib/index.js`。另有 `STRING_FIXES` 表处理**连 `.dshpurge.bak` 都是脏的**那种文件（备份抓取晚于首次修改），按官方原文定点替换、替换前备份 `<file>.bak-<ts>-stringfix`；`36` → `dsh-tool-fs` 的 `justification` 描述；`33` → `dsh-tool-bash`/`dsh-tool-pwsh` 的沙箱拒绝句、`justification` 说明与 pwsh 的 EPERM 边界（pwsh 沙箱句在 base 与 Windows 分支各一处，条目第 5 个字段声明预期 2 次）。默认要求污点恰好出现 1 次，给了第 5 个字段则按该次数全替换。幂等，同一目标本轮只还原一次，写盘前用 `new Function` 校验生成的桩 | 手工：`node disable-purge-patch.mjs 6 15 16 23 29 34 36 37 61 92 --dry-run` → 直接跑 → 重启 |
+| `disable-purge-patch.mjs` | 通用停用器：把指定的 purge 补丁改成停用桩（`disabled: true` + 哨兵 pattern），并用 `.dshpurge.bak` 还原它改过的宿主文件。`RESTORE` 表：`6`/`15` → `dsh-sandbox-local/lib/index.js`（命令层，同一文件还原一次两条都中和）、`16` → `dsh-fs-sandbox/lib/index.js`、`34`/`36` → `dsh-sandbox/lib/index.js`、`29` → `dsh-tool-web/lib/index.js`、`61` → `dsh-sandbox-policy` + 两个 `dsh-permission-presets` 文件（孤儿改动挂这里）、`37`/`92` → `dsh-subagent` 两文件（去重后只覆盖一次）、`23` → `dsh-tool-subagent/lib/index.js`。另有 `STRING_FIXES` 表处理**连 `.dshpurge.bak` 都是脏的**那种文件（备份抓取晚于首次修改），按官方原文定点替换、替换前备份 `<file>.bak-<ts>-stringfix`；`36` → `dsh-tool-fs` 的 `justification` 描述；`33` → `dsh-tool-bash`/`dsh-tool-pwsh` 的沙箱拒绝句、`justification` 说明与 pwsh 的 EPERM 边界（pwsh 沙箱句在 base 与 Windows 分支各一处，条目第 5 个字段声明预期 2 次）。默认要求污点恰好出现 1 次，给了第 5 个字段则按该次数全替换；`48` → 同两文件的 delete/move 谨慎句（bash 1 次、pwsh 2 次）。幂等，同一目标本轮只还原一次，写盘前用 `new Function` 校验生成的桩 | 手工：`node disable-purge-patch.mjs 6 15 16 23 29 33 34 36 37 48 61 92 --dry-run` → 直接跑 → 重启 |
 | `purge-skip-disabled.mjs` | 给 purge 的 `applyPatches()` 和 `patchStatus()` 各加一个 `if (p.disabled)` 短路：点「应用」不再按原定义重打停用桩，状态也不再依赖软判定。不改 `revertAll`，还原照常。幂等、锚点找不到即 `exit 3` 不写盘、写盘前备份 `core.js.bak-<stamp>-disabled-skip` | 手工：`node purge-skip-disabled.mjs --dry-run` → 直接跑 → 重启。**升级 purge 后必须重跑** |
 
 ## 更新 DSH 之后，顺序不能反
@@ -41,7 +41,7 @@
 purge 自己升级（或重装）会把 `vendor/dsh-purge/lib/core.js` 换成新版本，13 个停用桩和两处 `disabled` 短路一起丢。按顺序重放：
 
 ```powershell
-node tools\disable-purge-patch.mjs 6 15 16 23 29 33 34 36 37 61 92   # 造桩 + 还原 / 定点回改宿主文件
+node tools\disable-purge-patch.mjs 6 15 16 23 29 33 34 36 37 48 61 92   # 造桩 + 还原 / 定点回改宿主文件
 node tools\purge-skip-disabled.mjs                   # 让「应用」认得 disabled
 ```
 

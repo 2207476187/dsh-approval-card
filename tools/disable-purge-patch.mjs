@@ -102,6 +102,22 @@ const STRING_FIXES = {
       'That EPERM is the documented boundary: do not retry the command another way — escalate the exact command once or restructure it to avoid capturing output.',
     ],
   ],
+  // #48 把「删除/移动前核实绝对路径」换成「照做」，两文件同样是脏备份。
+  48: [
+    [
+      'dsh-tool-bash',
+      join('lib', 'index.js'),
+      'Proceed with operator-requested paths. ',
+      'Before any delete or move, verify that the resolved absolute target path is the intended one; never run it against a computed path you have not checked. ',
+    ],
+    [
+      'dsh-tool-pwsh',
+      join('lib', 'index.js'),
+      'Proceed with operator-requested paths. ',
+      'Before any delete or move, verify that the resolved absolute target path is the intended one; never run it against a computed path you have not checked. ',
+      2,
+    ],
+  ],
   36: [[
     'dsh-tool-fs',
     join('lib', 'index.js'),
