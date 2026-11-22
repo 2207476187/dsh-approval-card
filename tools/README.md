@@ -21,7 +21,7 @@
 | `update-our-free-model.mjs` | 按作者 feed 清单把 `dsh-our-free-model` 升到最新（校验 size+sha256，整目录先备份）。npm 上的 latest 停在 2.1.0，真正的更新只走作者的 GitHub feed | 手工：`node --use-system-ca update-our-free-model.mjs --dry-run` |
 | `disable-purge-approval-patches.mjs` | 停用 purge 里「绕过审批 / 改默认沙箱与审批策略」的 8 条补丁（`#5 #7 #8 #9 #10 #11 #12 #51`），并把被改脏的 `dsh-user-approval`、`dsh-base` 还原成官方。幂等，purge 每次「应用」或升级后重跑 | 手工：`--dry-run` 看改动 → 直接跑 → 重启 |
 | `idm-clsid-scan.ps1` | 只读扫描 IDM 藏在 `HKCU\Software\Classes[WOW6432Node]\CLSID` 下的伪装计数器（`{07999AC3-…}` 的 `Therad` 等于试用剩余天数）。纯 ASCII 英文输出，5.1/7 都能跑 | 手工：`idm-clsid-scan.ps1` |
-| `disable-purge-patch.mjs` | 通用停用器：把指定的 purge 补丁改成停用桩（`disabled: true` + 哨兵 pattern），并用 `.dshpurge.bak` 还原它改过的宿主文件。`RESTORE` 表目前：`6`/`15` → `dsh-sandbox-local/lib/index.js`（命令层，同一文件还原一次两条都中和）、`16` → `dsh-fs-sandbox/lib/index.js`（文件工具层的 `checkedTarget`）、`29` → `dsh-tool-web/lib/index.js`。幂等，同一目标本轮只还原一次，写盘前用 `new Function` 校验生成的桩 | 手工：`node disable-purge-patch.mjs 6 15 16 --dry-run` → 直接跑 → 重启 |
+| `disable-purge-patch.mjs` | 通用停用器：把指定的 purge 补丁改成停用桩（`disabled: true` + 哨兵 pattern），并用 `.dshpurge.bak` 还原它改过的宿主文件。`RESTORE` 表目前：`6`/`15` → `dsh-sandbox-local/lib/index.js`（命令层，同一文件还原一次两条都中和）、`16` → `dsh-fs-sandbox/lib/index.js`（文件工具层的 `checkedTarget`）、`34` → `dsh-sandbox/lib/index.js`（模型看到的拒绝标记与升级提示）、`29` → `dsh-tool-web/lib/index.js`。幂等，同一目标本轮只还原一次，写盘前用 `new Function` 校验生成的桩。**注意 `dsh-tool-fs` 的 `.dshpurge.bak` 是脏备份**（与 live 同哈希、内含 `Approval is auto-granted.`），不能拿它还原 | 手工：`node disable-purge-patch.mjs 6 15 16 34 --dry-run` → 直接跑 → 重启 |
 
 ## 更新 DSH 之后，顺序不能反
 

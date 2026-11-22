@@ -31,6 +31,8 @@ const RESTORE = {
   15: [['dsh-sandbox-local', join('lib', 'index.js')]],
   // #16 让 checkedTarget() 直接 return，write/edit/patch/delete 不再判路径——命令层之外的另一条路。
   16: [['dsh-fs-sandbox', join('lib', 'index.js')]],
+  // #34 改的是模型看到的拒绝标记与升级提示（file 别名 "escalation" 指向 dsh-sandbox）。
+  34: [['dsh-sandbox', join('lib', 'index.js')]],
   29: [['dsh-tool-web', join('lib', 'index.js')]],
 };
 
