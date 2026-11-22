@@ -22,6 +22,7 @@
 | `disable-purge-approval-patches.mjs` | 停用 purge 里「绕过审批 / 改默认沙箱与审批策略」的 8 条补丁（`#5 #7 #8 #9 #10 #11 #12 #51`），并把被改脏的 `dsh-user-approval`、`dsh-base` 还原成官方。幂等，purge 每次「应用」或升级后重跑 | 手工：`--dry-run` 看改动 → 直接跑 → 重启 |
 | `idm-clsid-scan.ps1` | 只读扫描 IDM 藏在 `HKCU\Software\Classes[WOW6432Node]\CLSID` 下的伪装计数器（`{07999AC3-…}` 的 `Therad` 等于试用剩余天数）。纯 ASCII 英文输出，5.1/7 都能跑 | 手工：`idm-clsid-scan.ps1` |
 | `disable-purge-patch.mjs` | 通用停用器：把指定的 purge 补丁改成停用桩（`disabled: true` + 哨兵 pattern），并用 `.dshpurge.bak` 还原它改过的宿主文件。`RESTORE` 表目前：`6`/`15` → `dsh-sandbox-local/lib/index.js`（命令层，同一文件还原一次两条都中和）、`16` → `dsh-fs-sandbox/lib/index.js`（文件工具层的 `checkedTarget`）、`34` → `dsh-sandbox/lib/index.js`（模型看到的拒绝标记与升级提示）、`29` → `dsh-tool-web/lib/index.js`。幂等，同一目标本轮只还原一次，写盘前用 `new Function` 校验生成的桩。**注意 `dsh-tool-fs` 的 `.dshpurge.bak` 是脏备份**（与 live 同哈希、内含 `Approval is auto-granted.`），不能拿它还原 | 手工：`node disable-purge-patch.mjs 6 15 16 34 --dry-run` → 直接跑 → 重启 |
+| `purge-skip-disabled.mjs` | 给 purge 的 `applyPatches()` 和 `patchStatus()` 各加一个 `if (p.disabled)` 短路：点「应用」不再按原定义重打停用桩，状态也不再依赖软判定。不改 `revertAll`，还原照常。幂等、锚点找不到即 `exit 3` 不写盘、写盘前备份 `core.js.bak-<stamp>-disabled-skip` | 手工：`node purge-skip-disabled.mjs --dry-run` → 直接跑 → 重启。**升级 purge 后必须重跑** |
 
 ## 更新 DSH 之后，顺序不能反
 
@@ -34,6 +35,17 @@
 反顺序还能接受的情形只有一种：purge 那一轮的目标文件里没有 `lib\main.js`（`skip` 掉）。但别指望每次都这样。
 
 装完补丁后，加载器只在外壳里追加菜单项，`main.official.js` 保留官方原件；purge 认不出的锚点会 `skipped`，不会把加载器改坏——但**备份仍然要先做**（`restore-loader.cmd` 就是兜底）。
+
+### 还有第三件：把停用桩补回来
+
+purge 自己升级（或重装）会把 `vendor/dsh-purge/lib/core.js` 换成新版本，13 个停用桩和两处 `disabled` 短路一起丢。按顺序重放：
+
+```powershell
+node tools\disable-purge-patch.mjs 6 15 16 29 34   # 造桩 + 还原宿主文件
+node tools\purge-skip-disabled.mjs                   # 让「应用」认得 disabled
+```
+
+顺序不能反：先有桩，短路才有东西可跳。做完再点「应用」就是安全的，停用项会一直显示 `skipped`。
 
 ## 哪些不进仓库
 
