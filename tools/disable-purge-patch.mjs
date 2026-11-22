@@ -62,6 +62,46 @@ const RESTORE = {
 // 还原表救不了，只能按官方原文定点换回去。
 // 结构：[包名, 相对路径, 改坏后的原文, 官方原文]
 const STRING_FIXES = {
+  // #33 改的 bash/pwsh 两文件，.dshpurge.bak 与 live 逐字节相同（备份晚于首次修改），
+  // 还原表救不了，只能按官方原文逐字改回。官方原文取自上游 packages/shell/tool-*/src/index.ts。
+  33: [
+    // 描述末尾的沙箱句（bash）
+    [
+      'dsh-tool-bash',
+      join('lib', 'index.js'),
+      'reported as \\`[sandbox: file access limited under <mode> mode]\\`, a sandbox notice; continue the task and retry another way if needed.',
+      'reported as \\`[sandbox: file access denied under <mode> mode]\\`, a policy denial: do not retry another way.',
+    ],
+    // justification 参数说明（bash）
+    [
+      'dsh-tool-bash',
+      join('lib', 'index.js'),
+      'one sentence describing why this command needs the wider access.',
+      'one sentence for the user explaining why this exact command needs the wider access.',
+    ],
+    // 描述末尾的沙箱句（pwsh：base 与 Windows 专属分支各一处，共 2 次）
+    [
+      'dsh-tool-pwsh',
+      join('lib', 'index.js'),
+      'reported as `[sandbox: file access limited under <mode> mode]`, a sandbox notice; continue the task and retry another way if needed.',
+      'reported as `[sandbox: file access denied under <mode> mode]`, a policy denial: do not retry another way.',
+      2,
+    ],
+    // justification 参数说明（pwsh）
+    [
+      'dsh-tool-pwsh',
+      join('lib', 'index.js'),
+      'one sentence describing why this command needs the wider access.',
+      'one sentence for the user explaining why this exact command needs the wider access.',
+    ],
+    // 受限令牌下的 EPERM 边界（只有 pwsh 有这段）
+    [
+      'dsh-tool-pwsh',
+      join('lib', 'index.js'),
+      'If a spawn hits EPERM, retry with inherit stdio or continue another way.',
+      'That EPERM is the documented boundary: do not retry the command another way — escalate the exact command once or restructure it to avoid capturing output.',
+    ],
+  ],
   36: [[
     'dsh-tool-fs',
     join('lib', 'index.js'),
@@ -194,7 +234,7 @@ for (const id of IDS) {
 
 // 4) 定点文本修复（备份不可用的那几处）
 for (const id of IDS) {
-  for (const [pkg, rel, from, to] of STRING_FIXES[id] ?? []) {
+  for (const [pkg, rel, from, to, expected] of STRING_FIXES[id] ?? []) {
     const live = join(AI, pkg, rel);
     if (!existsSync(live)) {
       log(`[定点] ${pkg}/${rel}: 文件不存在，跳过`);
@@ -209,15 +249,18 @@ for (const id of IDS) {
       }
       continue;
     }
-    if (body.split(from).length - 1 !== 1) {
-      log(`[定点] ${pkg}/${rel}: 污点出现多次，跳过（请人工核对）`);
+    const count = body.split(from).length - 1;
+    // 第 5 个字段是预期出现次数（同一句在多处出现时用），未给则要求恰好 1 次。
+    const want = expected ?? 1;
+    if (count !== want) {
+      log(`[定点] ${pkg}/${rel}: 污点出现 ${count} 次，预期 ${want} 次，跳过（请人工核对）`);
       continue;
     }
     changed += 1;
-    log(`[定点] ${pkg}/${rel}: 回改 1 处${DRY ? '（演练）' : ''}`);
+    log(`[定点] ${pkg}/${rel}: 回改 ${count} 处${DRY ? '（演练）' : ''}`);
     if (!DRY) {
       copyFileSync(live, `${live}.bak-${Date.now()}-stringfix`);
-      writeFileSync(live, body.replace(from, to), 'utf8');
+      writeFileSync(live, body.split(from).join(to), 'utf8');
     }
   }
 }
