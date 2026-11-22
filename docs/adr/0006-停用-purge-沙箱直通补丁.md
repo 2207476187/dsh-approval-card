@@ -1,7 +1,7 @@
 # 0006 停用 purge 的沙箱直通补丁 #6 / #15
 
 - 状态：已采纳（2026-11-22）
-- 影响面：`vendor/dsh-purge/lib/core.js`、`dsh-sandbox-local/lib/index.js`
+- 影响面：`vendor/dsh-purge/lib/core.js`、`dsh-sandbox-local/lib/index.js`、`dsh-fs-sandbox/lib/index.js`
 
 ## 背景
 
@@ -49,3 +49,26 @@ confine(argv, policy) {
 - **日常运维变卡**：写 `$DSH_HOME`（改 purge、装插件、动配置）、写 `X:\…\resources\app` 都会真的触发审批卡或被沙箱拒绝。以前那种"说改就改"是 `#15` 给的，现在没了。
 - `read-only` 会话恢复真实含义：写命令会直接失败，不弹卡。
 - **`#34` 未收**（`SANDBOX_HINT_NEUTRAL`，`file: "escalation"`）：它把「沙箱拒绝 → 需要用户审批」的提示软化成「沙箱受限」，模型被拒时看不到升级路径，可能误判为"能力不足"而放弃或绕路。这条属于提示词层，需要单独确认包名映射后再处理。
+
+## 补遗（同日）：#16 是同一层的第三道开关
+
+停完 `#6`/`#15` 后复盘发现判断有个缺口：`#15` 管的是**命令执行**（`pwsh` 里跑的东西套不套 runner），`#16` 管的是**文件工具**（`write`/`edit`/`patch`/`delete` 这四个工具自身判不判路径）。两条路不互通，只停 `#15` 仍然挡不住 `write`。
+
+`#16`（`FS_FENCE_DISABLED`）改 `dsh-fs-sandbox/lib/index.js` 的 `checkedTarget()`，官方版在 `read-only` 下抛 `FS_SANDBOX_DENIED`，在 `workspace-write` 下要求目标落在 `writableRoots` 里否则同样抛错；purge 把它换成一行 `return target;`：
+
+```js
+async checkedTarget(target, sandboxPolicy) {
+  // [dsh-purge] filesystem sandbox bypass: the per-call policy fence is
+  // disabled — write/edit mutations are never denied regardless of the
+  // resolved read-only / workspace-write mode.
+  return target;
+}
+```
+
+后果不只是"能写"：因为 `checkedTarget` 永不抛错，工具就不会走升级审批那条路 —— **一张卡都不会出现**。此前"写 `$DSH_HOME` 全程静默成功"归因于自动审批放行是错的，真正原因是这一层还开着。
+
+按同一决策（候选 C 的口径）处理：`RESTORE` 表加 `16` → `dsh-fs-sandbox/lib/index.js`，还原后 live 9,122 B 与 `.dshpurge.bak` 同哈希，`checkedTarget` 回到官方实现（`read-only` 抛错、`workspace-write` 判 `writableRoots`）。
+
+验证：`node --check core.js` 通过（366,756 B）；`#6 #15 #16 #29` 全 `skipped`，全量 `applied 39 / skipped 30 / na 16 / missing_file 1`；重跑幂等。
+
+重启后第一次写工作区外文件才真正验证 —— 那时应该弹卡，或者被 `FS_SANDBOX_DENIED` 拒掉。
