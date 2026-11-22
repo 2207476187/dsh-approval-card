@@ -19,6 +19,8 @@
 | `fix-python-path.ps1` | 从**机器级** PATH 删掉指向 `Python313` 的条目（Windows 机器级在前、用户级在后，前者会盖住后者里的新 Python）。自动备份并打印还原命令，保持 `REG_EXPAND_SZ`、广播 `WM_SETTINGCHANGE` | 手工：`-DryRun` 看变更 → 直接跑（自提权）→ `-Restore` 还原 |
 | `install-skill-from-github.mjs` | 从 GitHub 仓库的一个目录装成 DSH skill：走 `gh api` 读 tree → 逐文件 raw 下载 → 静态扫描 8 类可疑模式 → 算每个文件 sha256。目标目录已存在即拒绝（不覆盖手改过的 skill），命中可疑内容退出码 2 但不自动删 | 手工：`node install-skill-from-github.mjs <owner/repo> <远端目录> <本地名> [--dry-run] [--json]` |
 | `update-our-free-model.mjs` | 按作者 feed 清单把 `dsh-our-free-model` 升到最新（校验 size+sha256，整目录先备份）。npm 上的 latest 停在 2.1.0，真正的更新只走作者的 GitHub feed | 手工：`node --use-system-ca update-our-free-model.mjs --dry-run` |
+| `disable-purge-approval-patches.mjs` | 停用 purge 里「绕过审批 / 改默认沙箱与审批策略」的 8 条补丁（`#5 #7 #8 #9 #10 #11 #12 #51`），并把被改脏的 `dsh-user-approval`、`dsh-base` 还原成官方。幂等，purge 每次「应用」或升级后重跑 | 手工：`--dry-run` 看改动 → 直接跑 → 重启 |
+| `idm-clsid-scan.ps1` | 只读扫描 IDM 藏在 `HKCU\Software\Classes[WOW6432Node]\CLSID` 下的伪装计数器（`{07999AC3-…}` 的 `Therad` 等于试用剩余天数）。纯 ASCII 英文输出，5.1/7 都能跑 | 手工：`idm-clsid-scan.ps1` |
 
 ## 更新 DSH 之后，顺序不能反
 
