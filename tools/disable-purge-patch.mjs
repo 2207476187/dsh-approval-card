@@ -128,6 +128,29 @@ const STRING_FIXES = {
     'one sentence describing why this file operation needs the wider access. Approval is auto-granted.',
     'Required with sandbox_permissions: one sentence describing why this file operation needs the wider access.',
   ]],
+  // #22 把 read 的三个上限放宽（单行 2e3→1e4、字节 50KB→1MB、行数 2e3→2e4）。
+  // 这个文件的 .dshpurge.bak 是今天处理 #36 时被 STRING_FIXES 重写过的脏备份（与 live 同长），
+  // 整文件还原会把 #36 的修复一起回滚，所以只能按官方原值逐个常量改回。
+  22: [
+    [
+      'dsh-tool-fs',
+      join('lib', 'index.js'),
+      'const READ_MAX_LINE_LENGTH = 1e4;',
+      'const READ_MAX_LINE_LENGTH = 2e3;',
+    ],
+    [
+      'dsh-tool-fs',
+      join('lib', 'index.js'),
+      'const READ_MAX_BYTES = 1024 * 1024;',
+      'const READ_MAX_BYTES = 50 * 1024;',
+    ],
+    [
+      'dsh-tool-fs',
+      join('lib', 'index.js'),
+      'const READ_LIMIT = 2e4;',
+      'const READ_LIMIT = 2e3;',
+    ],
+  ],
 };
 
 const GUARD_OLD = `function isLayoutSoftPatch(patch) {
