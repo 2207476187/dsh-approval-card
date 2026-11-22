@@ -1,0 +1,164 @@
+#!/usr/bin/env node
+// 通用：停用 dsh-purge 的指定补丁，并把该补丁改过的宿主文件还原成官方原文（.dshpurge.bak）。
+//
+// 为什么需要：purge 每次「应用」或升级都会重写 vendor\dsh-purge\lib\core.js，
+// 手工停用会丢。这里把「停用桩 + 还原」做成幂等脚本，可反复重放。
+//
+// 用法：
+//   node tools/disable-purge-patch.mjs 29 --dry-run
+//   node tools/disable-purge-patch.mjs 29
+//
+// 与 disable-purge-approval-patches.mjs 的分工：
+//   那个脚本专管审批/沙箱绕过那 8 条（含 cordis.patch.yml 默认值还原）；
+//   这个脚本是通用的单条停用器，按 id 处理，还原目标由 RESTORE 表声明。
+
+import { readFileSync, writeFileSync, copyFileSync, existsSync } from 'node:fs';
+import { join } from 'node:path';
+import { homedir } from 'node:os';
+
+const DRY = process.argv.includes('--dry-run');
+const IDS = process.argv.slice(2).map(Number).filter((n) => Number.isFinite(n));
+const DSH = process.env.DSH_HOME ?? join(homedir(), '.dsh');
+const PURGE_LIB = join(DSH, 'profiles', 'desktop', 'vendor', 'dsh-purge', 'lib');
+const CORE = join(PURGE_LIB, 'core.js');
+const AI = process.env.DSH_AI_BASE
+  ?? 'X:/Program Files/DeepSeek Harness/resources/app/dsh/node_modules/@deepseek-ai';
+
+// 每个补丁改过的宿主文件：[包名, 相对路径]
+const RESTORE = {
+  29: [['dsh-tool-web', join('lib', 'index.js')]],
+};
+
+const GUARD_OLD = `function isLayoutSoftPatch(patch) {
+  return isIdentityLayoutPatch(patch) || isApprovalSentencePatch(patch) || Boolean(patch?.softSettle);
+}`;
+const GUARD_NEW = `function isLayoutSoftPatch(patch) {
+  // 显式停用（disabled: true）的补丁不再走「软完成」判定，否则会永远显示已应用。
+  if (patch?.disabled) return false;
+  return isIdentityLayoutPatch(patch) || isApprovalSentencePatch(patch) || Boolean(patch?.softSettle);
+}`;
+
+const log = (...a) => console.log(...a);
+
+if (!IDS.length) {
+  console.error('用法: node tools/disable-purge-patch.mjs <id> [id...] [--dry-run]');
+  process.exit(2);
+}
+if (!existsSync(CORE)) {
+  console.error(`找不到 ${CORE}`);
+  process.exit(2);
+}
+
+const raw = readFileSync(CORE, 'utf8');
+const crlf = raw.includes('\r\n');
+let text = raw.replace(/\r\n/g, '\n');
+let changed = 0;
+
+// 1) disabled 守卫（与审批脚本共用同一锚点，已存在则跳过）
+if (text.includes(GUARD_NEW)) {
+  log('[守卫] 已存在，跳过');
+} else if (text.includes(GUARD_OLD)) {
+  text = text.replace(GUARD_OLD, GUARD_NEW);
+  changed += 1;
+  log('[守卫] 已插入 disabled 守卫');
+} else {
+  log('[守卫] 未找到锚点，跳过（purge 版本可能不同）');
+}
+
+// 2) 逐条改写成停用桩
+for (const id of IDS) {
+  if (text.includes(`__DSH_PURGE_DISABLED_${id}__`)) {
+    log(`[#${id}] 已是停用桩，跳过`);
+    continue;
+  }
+  const at = text.indexOf(`id: ${id},`);
+  if (at < 0) {
+    log(`[#${id}] 未找到定义，跳过`);
+    continue;
+  }
+  const open = text.lastIndexOf('\n  {\n', at);
+  const close = text.indexOf('\n  },\n', at);
+  if (open < 0 || close < 0) {
+    log(`[#${id}] 块边界定位失败，跳过`);
+    continue;
+  }
+  const block = text.slice(open, close + 5);
+  if (block.split(`id: ${id},`).length - 1 !== 1) {
+    log(`[#${id}] 块内 id 重复，跳过`);
+    continue;
+  }
+  const fields = [];
+  for (const re of [
+    /name:\s*"[^"]*"/,
+    /layer:\s*"[^"]*"/,
+    /layer_en:\s*"[^"]*"/,
+    /desc:\s*"[^"]*"/,
+    // file 可能是单元素或多元素数组，必须整体取到闭合括号；用 [^,\n]+ 会在逗号处截断。
+    /file:\s*\[[^\]]*\]|file:\s*"[^"]*"/,
+    /rel:\s*\[[^\]]*\]|rel:\s*"[^"]*"/,
+  ]) {
+    const m = block.match(re);
+    if (m) fields.push(`    ${m[0].trim().replace(/,$/, '')},`);
+  }
+  const stub = [
+    '',
+    '  {',
+    `    id: ${id},`,
+    ...fields,
+    '    disabled: true,',
+    `    patterns: ["__DSH_PURGE_DISABLED_${id}__"],`,
+    '    replace: "",',
+    '  },',
+    '',
+  ].join('\n');
+  // 桩必须自身能被解析，否则会把 core.js 写坏（file 数组被截断就是这样翻车的）。
+  try {
+    // eslint-disable-next-line no-new-func
+    new Function(`return [\n${stub}\n];`);
+  } catch (err) {
+    console.error(`[#${id}] 生成的停用桩不合法，已中止：${err.message}\n${stub}`);
+    process.exit(3);
+  }
+  if (DRY) log(`[#${id}] 桩预览:\n${stub}`);
+  text = text.slice(0, open) + stub + text.slice(close + 5);
+  changed += 1;
+  const nm = block.match(/name:\s*"([^"]*)"/);
+  log(`[#${id}] ${nm ? nm[1] : ''} → 停用桩（${block.length} → ${stub.length} 字符）`);
+}
+
+// 3) 还原被这些补丁改过的宿主文件
+for (const id of IDS) {
+  for (const [pkg, rel] of RESTORE[id] ?? []) {
+    const live = join(AI, pkg, rel);
+    const bak = `${live}.dshpurge.bak`;
+    if (!existsSync(live) || !existsSync(bak)) {
+      log(`[还原] ${pkg}/${rel}: 缺原件或备份，跳过`);
+      continue;
+    }
+    if (readFileSync(live, 'utf8') === readFileSync(bak, 'utf8')) {
+      log(`[还原] ${pkg}/${rel}: 已是官方原文`);
+      continue;
+    }
+    changed += 1;
+    log(`[还原] ${pkg}/${rel}: 用 .dshpurge.bak 覆盖${DRY ? '（演练）' : ''}`);
+    if (!DRY) copyFileSync(bak, live);
+  }
+}
+
+if (changed === 0) {
+  log('\n没有需要改动的地方。');
+  process.exit(0);
+}
+
+if (DRY) {
+  log(`\n演练结束：将改动 ${changed} 处。去掉 --dry-run 才会写盘。`);
+  process.exit(0);
+}
+
+const stamp = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 14);
+copyFileSync(CORE, `${CORE}.bak-${stamp}-disable`);
+if (crlf) text = text.replace(/\n/g, '\r\n');
+writeFileSync(CORE, text, 'utf8');
+log(`\n已写入 ${CORE}`);
+log(`备份 ${CORE}.bak-${stamp}-disable`);
+log('重启 DSH 后生效；面板里该补丁应显示为「跳过」。');
