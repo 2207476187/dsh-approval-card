@@ -107,11 +107,33 @@ marker 那处的必要性：`#1` 第三项 marker 原是 `"Do not soft-refuse or
 
 语义差别：「不许硬拒绝」保留；真做不到时可以说明做不到、可以给替代方案；只有"技术做得到、仅被道德或系统限制挡住"的场合才不许用拒绝措辞。`hedging` 与 `moralizing` 两条约束取消。
 
-## 已知缺口：升级后 `#1` 无法重新应用
+## 升级后如何补回：点「应用」即可
 
-`#1` 的 `pattern` 是 `const AGENT_INSTRUCTIONS_INTRO = "` + `STRONG_INTRO_V2` + `"`，其中 `STRONG_INTRO_V2` = CORE + AUTHORIZED_TAIL（core.js L2570，**不含** ANTI_SOFT_TAIL）。产物的实际值是完整 `STRONG_INTRO`（含 ANTI 段），所以 pattern 现在**匹配不上** —— 当前靠 `skipIfMarked` 的 marker 顶住，不会重打。
+`#1` 原来的 `pattern` 只有 `STRONG_INTRO_V1` / `STRONG_INTRO_V2` 两种中间态，匹配不到官方原文 —— 所以升级覆盖后它只会显示「跳过」，强引导语静默退回「仅供参考」。
 
-后果：DSH 升级覆盖 `index.js` 后，文件回到官方弱措辞，marker 全不命中、pattern 也不匹配官方原文 —— `#1` 会报 pattern 缺失，打不上。届时的处置：手工把 L124 换成本文「当前值」那段（官方原文仍在「官方原文」节），或给 `#1` 补一条以官方原文为 pattern 的 replacement。
+2026-11-22 20:01 补了两条规则（core.js 的 `#1.replacements` 末尾）：
+
+```
+const WORKSPACE_CONTEXT_INTRO = "<官方原文>"  →  const WORKSPACE_CONTEXT_INTRO = "<STRONG_INTRO>"
+const AGENT_INSTRUCTIONS_INTRO = "<官方原文>"  →  const AGENT_INSTRUCTIONS_INTRO = "<STRONG_INTRO>"
+```
+
+「官方原文」直接引用 core.js L2571 的 `OFFICIAL_REPLACEMENT_BODY`，已与官方编译产物逐字核对一致（见下节）。DSH 升级把 `index.js` 换回官方后，在 purge 面板点一次「应用」，`#1` 就会命中并写回。
+
+离线验证：`.build\verify-official-replay.mjs` 取未打过补丁的官方副本（`.dsh\dsh-browser\node_modules\.pnpm\...\dsh-agent-instructions\lib\index.js`）跑 `applyReplacementsToText` —— 53,316 → 53,959 字节，8 项断言全 PASS；二次运行零变化，对当前 live 也零变化。
+
+这两条规则本身要用脚本补进 core.js（该文件在 `~/.dsh` 下，不在版本控制里，purge 重装会丢）：
+
+```powershell
+node tools\add-official-replay-patch.mjs --dry-run
+node tools\add-official-replay-patch.mjs
+```
+
+幂等，自动备份 `core.js.bak-<stamp>-official-replay`。
+
+注意 `#1` 的 `skipIfMarked`：marker 命中时直接判 applied，所以对已经打好的文件点「应用」仍是幂等的，不会叠加。
+
+仍需人工确认的一点：升级后 `#1` 的状态会先变成 `skipped`。这不是失败提示，是「没匹配到」。看到它就该点应用，或跑 `tools\README.md:59` 的探针核对。
 
 ## 官方原文
 
@@ -123,12 +145,13 @@ when applicable. More specific instructions take precedence over broader ones. T
 not override system, developer, or direct user instructions.
 ```
 
-确证依据（两源逐字一致）：
+确证依据（三源逐字一致）：
 
+0. `.dsh\dsh-browser\node_modules\.pnpm\...\dsh-agent-instructions\lib\index.js`（2026-11-22 20:01 找到的未打补丁副本）
 1. `#1` 的 `pattern`（覆盖 `WORKSPACE_CONTEXT_INTRO` 与 `AGENT_INSTRUCTIONS_INTRO` 两个旧版名，注释写明"0.1.6 及更早是 WORKSPACE_CONTEXT_INTRO；0.1.7 改名为 AGENT_INSTRUCTIONS_INTRO，句子相同"）
 2. core.js L2572–2576 `OFFICIAL_REPLACEMENT_BODY`
 
-### L125 `REPLACEMENT_AGENT_INSTRUCTIONS_INTRO` — 未独立验证
+### L125 `REPLACEMENT_AGENT_INSTRUCTIONS_INTRO` — 已确证
 
 ```
 This complete workspace instruction baseline replaces all earlier workspace instruction
@@ -137,7 +160,9 @@ guidance when applicable. More specific instructions take precedence over broade
 They do not override system, developer, or direct user instructions.
 ```
 
-唯一来源是 `#2` 第 1 条的 `replace`（`'"This complete workspace instruction baseline replaces all earlier workspace instruction baselines. ' + OFFICIAL_REPLACEMENT_BODY + '"'`）。`.dshpurge.bak` 与 live 相同，没有第三份干净副本可比。当前 live 已是这个值，所以**回退时 L125 无需改动**。
+确证依据：2026-11-22 20:01 在 `.dsh\dsh-browser\node_modules\.pnpm\...\dsh-agent-instructions\lib\index.js` 找到一份未被打过补丁的官方副本，其 L125 与本文逐字一致。此前只有 `#2` 第 1 条的 `replace` 一个来源。当前 live 已是这个值，**回退时 L125 无需改动**。
+
+同一份副本还确认了编译形态：`lib/index.js` 里三条常量都是**单个双引号字符串**（`src/render.ts` 里的三段 `+` 拼接已被 tsc 折叠）。这决定了 `#1` 新补的 pattern 可以直接用完整单串，不需要处理拼接。
 
 ### L126 `EMPTY_REPLACEMENT_AGENT_INSTRUCTIONS_INTRO` — 已确证
 

@@ -59,7 +59,20 @@ purge 升级后验证一条就够：
 Select-String -Path 'X:\Program Files\DeepSeek Harness\resources\app\dsh\node_modules\@deepseek-ai\dsh-agent-instructions\lib\index.js' -Pattern 'AGENT_INSTRUCTIONS_INTRO = "The following instructions are ACTIVE'
 ```
 
-有命中 = 仍生效。没命中就点一次 purge「应用」。它带 `skipIfMarked: true`，因为 `STRONG_*_V2` 是 `STRONG_*` 的前缀，不设这个守卫每次 apply 都会再叠一层（实测 +841 字符/次，永不收敛）。
+有命中 = 仍生效。没命中就点一次 purge「应用」—— 2026-11-22 20:01 给 `#1` 补了「官方原文 → 强引导语」的重放规则，所以点一下就够，不用手工改文件（离线验证见 `.build\verify-official-replay.mjs`）。
+
+它带 `skipIfMarked: true`，因为 `STRONG_*_V2` 是 `STRONG_*` 的前缀，不设这个守卫每次 apply 都会再叠一层（实测 +841 字符/次，永不收敛）。
+
+注意升级后 `#1` 会先显示 `skipped` —— 那是「没匹配到官方原文之外的东西」的正常态，不是失败。看到就点应用。
+
+这条重放规则本身要靠脚本补进去（core.js 不在版本控制里，purge 重装就丢）：
+
+```powershell
+node tools\add-official-replay-patch.mjs --dry-run   # 先看要插什么
+node tools\add-official-replay-patch.mjs             # 写入，自动备份 core.js.bak-<stamp>-official-replay
+```
+
+幂等，重复跑只报「已经补过」。判据是 `OFFICIAL_REPLACEMENT_BODY` 的 pattern 在文件里出现 2 处。
 
 ## 哪些不进仓库
 
