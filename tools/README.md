@@ -53,6 +53,14 @@
 
 这一路径不需要跑恢复脚本，按上面的顺序（`port-menu-restart` → 点「应用」）做完就是期望结果：停用的全跳过，`#1` 按重放规则重新打上。
 
+点「应用」之前先体检一次，确认那 22 条在新宿主上还打得动：
+
+```powershell
+node tools\preflight-upgrade.mjs
+```
+
+它比对 `tools/purge-baseline.json`（记着当前该有哪 22 条 applied），逐条打印升级后的状态。全绿就点应用；出现 ❌ 说明新版 DSH 改了那几句话，那几条不生效（不会改坏文件），用 `node .build\patch-json.mjs <id>` 看它本来要改什么，再决定是补 pattern 还是放弃。
+
 ### 更新 purge 之后：一条命令把状态恢复回来
 
 只有**主动更新 purge**（把 `core.js` 换成新版本）才会丢掉这些改动：47 条停用桩、两处 `disabled` 短路、`#1` 的重放规则、`#42` 的原子写加固一起没了。新版会往后追加补丁编号，旧条目指向不变；但新加的几条默认启用，恢复脚本不会替你停用它们 —— 更新后跑一次 `node .build\check-patch-status.mjs --list` 看一眼有没有新的 applied 要判断。

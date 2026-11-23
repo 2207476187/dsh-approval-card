@@ -1,0 +1,162 @@
+{
+  "note": "基线：这些补丁当前处于 applied。DSH 升级后应能重新打上，否则 preflight 会报掉队。",
+  "generatedAt": "2026-11-23T18:54:36.259Z",
+  "expectedCount": 22,
+  "entries": [
+    {
+      "id": 1,
+      "name": "WORKSPACE_CONTEXT_INTRO",
+      "file": "agent-instructions"
+    },
+    {
+      "id": 2,
+      "name": "REPLACEMENT_WORKSPACE_CONTEXT_INTRO",
+      "file": "agent-instructions"
+    },
+    {
+      "id": 3,
+      "name": "SCOPE_INTRO",
+      "file": "agent-instructions"
+    },
+    {
+      "id": 4,
+      "name": "SYSTEM_PROMPT_PERSONA",
+      "file": [
+        "agent-preset",
+        "web-app",
+        "headless",
+        "preset-acp-app",
+        "preset-sdk-app"
+      ]
+    },
+    {
+      "id": 43,
+      "name": "WEB_PRESET_IDENTITY_STRIP",
+      "file": [
+        "preset-standard",
+        "preset-ptc",
+        "preset-cordis",
+        "preset-minimal"
+      ]
+    },
+    {
+      "id": 70,
+      "name": "PRESET_SHELL_NETWORK",
+      "file": [
+        "preset-minimal",
+        "preset-sdk-minimal"
+      ]
+    },
+    {
+      "id": 73,
+      "name": "PRESET_BASH_MIRROR_LINE",
+      "file": [
+        "preset-minimal",
+        "preset-sdk-minimal"
+      ]
+    },
+    {
+      "id": 19,
+      "name": "TOOL_RESULT_PRUNER_DISABLED",
+      "file": "compaction-tool-result-pruner"
+    },
+    {
+      "id": 21,
+      "name": "BASH_TIMEOUT_RESTORE",
+      "file": "base"
+    },
+    {
+      "id": 25,
+      "name": "HARNESS_IDENTITY_STRIP",
+      "file": "system-prompt"
+    },
+    {
+      "id": 26,
+      "name": "MINIMAL_PERSONA_PURGE",
+      "file": [
+        "preset-minimal",
+        "preset-sdk-minimal"
+      ]
+    },
+    {
+      "id": 42,
+      "name": "SETTINGS_LEGACY_API",
+      "file": "settings"
+    },
+    {
+      "id": 50,
+      "name": "SESSION_REFERENCE_FRAMING_NEUTRAL",
+      "file": [
+        "session-reference"
+      ]
+    },
+    {
+      "id": 52,
+      "name": "SESSION_LOG_UPLOAD_DEFAULT_OFF",
+      "file": [
+        "session-log-deepseek",
+        "session-log-deepseek-types"
+      ]
+    },
+    {
+      "id": 66,
+      "name": "SYSTEM_PROMPT_RENDER_GUARD",
+      "file": [
+        "system-prompt",
+        "system-prompt-nested"
+      ]
+    },
+    {
+      "id": 68,
+      "name": "SYSTEM_NODES_CONTENT_GUARD",
+      "file": [
+        "agent-loop",
+        "session"
+      ]
+    },
+    {
+      "id": 69,
+      "name": "MODEL_STREAM_RELEASE",
+      "file": [
+        "llm-deepseek"
+      ]
+    },
+    {
+      "id": 75,
+      "name": "REWIND_RESET_TODOS",
+      "file": [
+        "tool-todo"
+      ]
+    },
+    {
+      "id": 58,
+      "name": "REWIND_SKIP_DERIVE",
+      "file": [
+        "session"
+      ]
+    },
+    {
+      "id": 63,
+      "name": "OFFICIAL_PLAN_MODE_NEUTRAL",
+      "file": [
+        "base",
+        "preset-ptc",
+        "preset-standard",
+        "preset-cordis"
+      ]
+    },
+    {
+      "id": 85,
+      "name": "SESSION_PROMPT_STEER_INTERRUPT",
+      "file": "api-session-controller"
+    },
+    {
+      "id": 86,
+      "name": "SESSION_QUEUE_STEER_INTERRUPT",
+      "file": [
+        "api-session-controller",
+        "agent-loop"
+      ]
+    }
+  ]
+}
