@@ -25,6 +25,7 @@
 | `purge-skip-disabled.mjs` | 给 purge 的 `applyPatches()` 和 `patchStatus()` 各加一个 `if (p.disabled)` 短路：点「应用」不再按原定义重打停用桩，状态也不再依赖软判定。不改 `revertAll`，还原照常。幂等、锚点找不到即 `exit 3` 不写盘、写盘前备份 `core.js.bak-<stamp>-disabled-skip` | 手工：`node purge-skip-disabled.mjs --dry-run` → 直接跑 → 重启。**升级 purge 后必须重跑** |
 | `restore-plan-mode-first-clause.mjs` | 只还原 `#63` 的第 1 段（「用户对话中的同意不构成批准」），第 2、3 段保留。必须同时改两处：删掉 `#63.replacements[0]`（否则 pattern 命中官方句，点「应用」会把它打回）+ 四个 patch 文件里 `purge 句 + marker` 换回官方句；两份 core.js 都处理。`--dry-run` 先看字节数变化，`--apply` 才写盘并备份 `.bak-<stamp>-plan-clause`；官方句或 purge 句出现次数不为 1 即 `exit 3`，不猜 | 手工：`node restore-plan-mode-first-clause.mjs` → `--apply` → 重启 |
 | `verify-gate-path-scan.ps1` | 验证 `dsh-hooks-shim` 的审批门不再把「文档正文里的路径」当成写目标（4 组用例：区内文件+正文引外部路径应不拦、区外目标应拦、命令读外部路径应拦、区内普通内容应不拦）。只读，payload 经 stdin 喂给 gate 子进程；`-Gate` 可指向另一份副本做新旧对照 | 手工：`pwsh -File tools\verify-gate-path-scan.ps1` |
+| `harden-legacy-write.mjs` | 把 `#42` 插入的 legacy 设置持久化改成**原子写**：先写 `settings-legacy.yaml.<pid>.tmp`，再 `rename` 覆盖正本，避免整文件覆写中途失败把账号池写残。必须同时改两处——宿主 `dsh-settings/lib/index.js` 的实际代码，与两份 `core.js` 里 `#42` 的 replace 文本；只改前者的话点一次「应用」就会退回非原子写（`#42` 有 4 条 pattern 替换后仍命中，靠 `skipIfMarked` 拦重复应用）。三个目标各要求原始语句恰好 1 次，否则 `exit 3`；写盘前备份 `.bak-<stamp>-atomic`。幂等：已加固则直接跳过 | 手工：`node harden-legacy-write.mjs`（演练）→ `--apply`。DSH 升级不用重跑；**purge 重装后需重跑** |
 
 ## 更新 DSH 之后，顺序不能反
 
