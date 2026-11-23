@@ -55,7 +55,7 @@
 
 ### 更新 purge 之后：一条命令把状态恢复回来
 
-只有**主动更新 purge**（把 `core.js` 换成新版本）才会丢掉这些改动：47 条停用桩、两处 `disabled` 短路、`#1` 的重放规则、`#42` 的原子写加固一起没了，而且新版可能重新编号。
+只有**主动更新 purge**（把 `core.js` 换成新版本）才会丢掉这些改动：47 条停用桩、两处 `disabled` 短路、`#1` 的重放规则、`#42` 的原子写加固一起没了。新版会往后追加补丁编号，旧条目指向不变；但新加的几条默认启用，恢复脚本不会替你停用它们 —— 更新后跑一次 `node .build\check-patch-status.mjs --list` 看一眼有没有新的 applied 要判断。
 
 ```powershell
 node tools\purge-restore-state.mjs            # 先演练，看每步要做什么
