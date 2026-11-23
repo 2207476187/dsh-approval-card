@@ -44,9 +44,18 @@
 
 装完补丁后，加载器只在外壳里追加菜单项，`main.official.js` 保留官方原件；purge 认不出的锚点会 `skipped`，不会把加载器改坏——但**备份仍然要先做**（`restore-loader.cmd` 就是兜底）。
 
-### 还有第三件：一条命令把状态恢复回来
+### DSH 升级之后：purge 的桩不会丢
 
-purge 自己升级（或重装）会把 `vendor/dsh-purge/lib/core.js` 换成新版本，47 条停用桩、两处 `disabled` 短路、`#1` 的重放规则、`#42` 的原子写加固一起丢；`@deepseek-ai/*` 同时被换回官方原文。
+安装器只换 `resources\app`（宿主 `@deepseek-ai/*`），`~/.dsh\profiles\desktop\vendor\dsh-purge\` 不在替换范围里。所以 DSH 升级后：
+
+- 九个定点回改过的宿主文件回到官方原文；
+- 47 处停用桩、`disabled` 短路、`#1` 重放规则、`#42` 原子写加固**都还在**。
+
+这一路径不需要跑恢复脚本，按上面的顺序（`port-menu-restart` → 点「应用」）做完就是期望结果：停用的全跳过，`#1` 按重放规则重新打上。
+
+### 更新 purge 之后：一条命令把状态恢复回来
+
+只有**主动更新 purge**（把 `core.js` 换成新版本）才会丢掉这些改动：47 条停用桩、两处 `disabled` 短路、`#1` 的重放规则、`#42` 的原子写加固一起没了，而且新版可能重新编号。
 
 ```powershell
 node tools\purge-restore-state.mjs            # 先演练，看每步要做什么
