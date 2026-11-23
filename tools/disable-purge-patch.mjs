@@ -43,6 +43,9 @@ const RESTORE = {
   // #39 把 v0 会话格式的校验放宽：summary 不再只许挂在 notice 形态上。
   // 本机没有 v0 会话、也没装 mnemon，这条在空转；备份干净，整文件还原。
   39: [['dsh-session-format-v0-to-v1', join('lib', 'index.js')]],
+  // #59 在 Auto 档的 pre-execute 审查器第一行插了 return next()，后面四十多行审查变不可达。
+  // 官方语义是「全权 + 每次调用先复核」，短路后变成「全权 + 不审」。备份干净，整文件还原。
+  59: [['dsh-experimental-auto-review', join('lib', 'index.js')]],
   // #36 同族：改工具 schema 里 sandbox_permissions / justification 的描述。
   36: [['dsh-sandbox', join('lib', 'index.js')]],
   // #61 把 read-only 那行「Do not refuse...」改成「Continue the task; approval is auto-granted」。
