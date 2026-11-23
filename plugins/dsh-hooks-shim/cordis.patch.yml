@@ -1,0 +1,9 @@
+# dsh-hooks-shim 作为组合包（bundle）时的默认插入行。
+# 正常装法是把 hooks-shim 整个目录复制到 <profile>\plugins\dsh-hooks-shim，
+# 然后在 profile 的 cordis.patch.yml 里 insert 一条（见 install-hooks-shim.ps1 生成的内容）。
+# 这个文件让本包在形态上与其他插件一致；若按组合包装（pnpm add + dsh.profile.bundles）也能直接生效。
+- insert:
+    - id: dsh-hooks-shim
+      name: './src/index.mjs'
+      config:
+        hooksFile: 'hooks.json'

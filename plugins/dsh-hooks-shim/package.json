@@ -1,0 +1,20 @@
+{
+  "name": "dsh-hooks-shim",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Standalone hooks bridge for DeepSeek Harness. Re-implements the official @deepseek-ai/dsh-hooks-claude-code + dsh-hooks-codex + dsh-hook-protocol triо on the same extension points, so the hooks deny/ask channel (which the approval-gate chain depends on) survives host upgrades that drop those packages.",
+  "type": "module",
+  "main": "./src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs"
+  },
+  "files": [
+    "src"
+  ],
+  "license": "MIT",
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}

@@ -27,6 +27,7 @@
 | `verify-gate-path-scan.ps1` | 验证 `dsh-hooks-shim` 的审批门不再把「文档正文里的路径」当成写目标（4 组用例：区内文件+正文引外部路径应不拦、区外目标应拦、命令读外部路径应拦、区内普通内容应不拦）。只读，payload 经 stdin 喂给 gate 子进程；`-Gate` 可指向另一份副本做新旧对照 | 手工：`pwsh -File tools\verify-gate-path-scan.ps1` |
 | `harden-legacy-write.mjs` | 把 `#42` 插入的 legacy 设置持久化改成**原子写**：先写 `settings-legacy.yaml.<pid>.tmp`，再 `rename` 覆盖正本，避免整文件覆写中途失败把账号池写残。必须同时改两处——宿主 `dsh-settings/lib/index.js` 的实际代码，与两份 `core.js` 里 `#42` 的 replace 文本；只改前者的话点一次「应用」就会退回非原子写（`#42` 有 4 条 pattern 替换后仍命中，靠 `skipIfMarked` 拦重复应用）。三个目标各要求原始语句恰好 1 次，否则 `exit 3`；写盘前备份 `.bak-<stamp>-atomic`。幂等：已加固则直接跳过 | 手工：`node harden-legacy-write.mjs`（演练）→ `--apply`。DSH 升级不用重跑；**purge 重装后需重跑** |
 | `restore-system-prompt-append.mjs` | 把 `#55`（`dsh-agent-loop` 的 `inHistory` 恒 false）与 `#72`（`dsh-llm-deepseek` 把「追加 system 消息」折成一行字段覆盖）还原成官方「变化时追加」的语义。官方原文从 `.dshpurge.bak` **按行取出**再替换，不手抄：`#55` 单行换单行、`#72` 一行换官方十行。`--dry-run` 默认，`--apply` 才写盘并备份 `.bak-<stamp>-append`；脏标记出现次数不为 1 即 `exit 3`。之后必须 `node disable-purge-patch.mjs 55 72` 造桩，否则点「应用」会打回 | 手工：`node restore-system-prompt-append.mjs` → `--apply` → `node disable-purge-patch.mjs 55 72` → 重启 |
+| `purge-restore-state.mjs` | 一条命令把 purge 与宿主文件恢复到「22 应用 / 47 跳过」这套状态：按固定顺序跑七个脚本（三次定点还原 → 造桩+整文件还原+定点回改 → `#42` 原子写 → `#1` 重放规则 → 应用跳过 disabled）。默认演练，`--apply` 写盘。DSH 升级后跑这个再点「应用」即可 | 手工：`node purge-restore-state.mjs` → `--apply` → 重启 → 面板点「应用」 |
 | `restore-system-field-extract.mjs` | 把 `#89`（`dsh-agent-loop` 的 `buildRequest` 把 `role: "system"` 消息抽成顶层 `system` 字段、`messages` 只留非 system）还原成官方整体下传。官方片段从 `.dshpurge.bak` 按行取出再套 live 缩进，不手抄；两个锚点各须唯一，7 项替换后断言，默认预览、`--apply` 写盘并备份 `.bak-<stamp>-sysfield`，已是官方形态时报「无需改动」。之后必须 `node disable-purge-patch.mjs 89` 造桩，且**不能整文件还原**（`dsh-agent-loop` 的备份混着 `#86` 与更早改动，与 live 差 22 行） | 手工：`node restore-system-field-extract.mjs` → `--apply` → `node disable-purge-patch.mjs 89` → 重启 |
 | `gate-readonly-allow.mjs` | 给审批门 `gate-bridge.mjs` 加 **R0 只读放行**：exec 命令的唯一理由是「工作区外路径」、且每段首个 token 都在只读白名单里时不弹卡（`Get-Content`/`Select-String`/`Get-ChildItem`/`Get-FileHash`/`Test-Path` 等）。全文出现写动词（`Set-`/`Remove-`/`Invoke-`/`Out-`…）、重定向、`$( … )`、反引号、`Invoke-Expression`、`Start-Process`、`ForEach-Object` 一律不放；凭据仍走 R3。幂等（含 `isPureReadCommand` 即跳过），写盘前备份 `.bak-<stamp>-readonly` | 手工：`node gate-readonly-allow.mjs` 看预览 → `--apply`。改完立即生效（hooks 每次调用都 spawn 一次 gate），无需重启 |
 | `verify-gate-readonly.ps1` | 验证 R0 没放开写操作：15 个用例（读源码/搜源码/列目录/算哈希/测路径 → 放行；写文件/管道写/重定向/删目录/读凭据/网络外发/读删串联/括号嵌套写 → 拦）。只读，payload 经 stdin 喂 gate 子进程；`-Gate` 指向另一份副本可做新旧对照（**备份文件要先复制成 `.mjs`**，node 不认 `.bak-<stamp>` 扩展名）。用例 12 固定记录已知缺口：`node -e` 这类「命令名只读、参数是代码」的形态 gate 判不了，靠沙箱兜底 | 手工：`pwsh -File tools\verify-gate-readonly.ps1` |
@@ -43,14 +44,30 @@
 
 装完补丁后，加载器只在外壳里追加菜单项，`main.official.js` 保留官方原件；purge 认不出的锚点会 `skipped`，不会把加载器改坏——但**备份仍然要先做**（`restore-loader.cmd` 就是兜底）。
 
-### 还有第三件：把停用桩补回来
+### 还有第三件：一条命令把状态恢复回来
 
-purge 自己升级（或重装）会把 `vendor/dsh-purge/lib/core.js` 换成新版本，26 个停用桩和两处 `disabled` 短路一起丢。按顺序重放：
+purge 自己升级（或重装）会把 `vendor/dsh-purge/lib/core.js` 换成新版本，47 条停用桩、两处 `disabled` 短路、`#1` 的重放规则、`#42` 的原子写加固一起丢；`@deepseek-ai/*` 同时被换回官方原文。
 
 ```powershell
-node tools\disable-purge-patch.mjs 6 15 16 22 23 24 29 33 34 36 37 38 39 48 55 59 61 72 78 89 92   # 造桩 + 还原 / 定点回改宿主文件
-node tools\purge-skip-disabled.mjs                   # 让「应用」认得 disabled
+node tools\purge-restore-state.mjs            # 先演练，看每步要做什么
+node tools\purge-restore-state.mjs --apply    # 真写盘，需要 danger-full-access
 ```
+
+它按固定顺序跑七步，顺序错了会白做：
+
+1. `restore-plan-mode-first-clause.mjs` —— 四个 preset yml 的对话同意条款回官方
+2. `restore-system-prompt-append.mjs` —— `#55`/`#72`，系统提示改回追加
+3. `restore-system-field-extract.mjs` —— `#89`，系统提示回到 `messages`
+4. `disable-purge-patch.mjs <21 个 id>` —— 造停用桩 + `.dshpurge.bak` 整文件还原 + `STRING_FIXES` 定点回改
+5. `harden-legacy-write.mjs` —— `#42` 的 legacy 设置写盘改成原子写
+6. `add-official-replay-patch.mjs` —— 给 `#1` 补官方原文重放规则
+7. `purge-skip-disabled.mjs` —— 让「应用」跳过 `disabled`
+
+前三条必须在第四条之前：它们还原的是宿主文件内容，而第四条会按 `.dshpurge.bak` 整文件覆盖其中一部分。反过来（先造桩再还原）会让面板认为原文回来了、等着你再点应用打上去。
+
+跑完重启 DSH，在 purge 面板点一次「应用」。核对面板：**22 应用 / 47 跳过 / 16 不适用 / 1 文件缺失**。对不上就是某一步没生效，看该步自己打印的原因。
+
+脚本幂等：已经是目标状态时每步都报「已是官方原文 / 无需改动」，重复跑不会叠加改动。
 
 顺序不能反：先有桩，短路才有东西可跳。做完再点「应用」就是安全的，停用项会一直显示 `skipped`。
 

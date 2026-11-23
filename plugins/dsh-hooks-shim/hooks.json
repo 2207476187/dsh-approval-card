@@ -1,0 +1,17 @@
+{
+  "_comment": "dsh-hooks-shim 的兜底规则。目标：0.2.1-rc.2 移除内建 hooks 包后，把 tools/pre-execute 的 ask 通道接回来。规则本身只做「检查 + 提意见」，真正的判定仍在 dsh-approval-gate。",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}\\rules\\gate-bridge.mjs\"",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}
