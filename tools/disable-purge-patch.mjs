@@ -40,6 +40,9 @@ const RESTORE = {
   // #38 给 dsh-persona 的 schema 加了旧字段 text 别名，并把 prefix 从必填改成可空。
   // 现在没有预设再用 0.1.2 的 text 写法，这条补丁没有服务对象，整文件还原成官方。
   38: [['dsh-persona', join('lib', 'index.js')]],
+  // #39 把 v0 会话格式的校验放宽：summary 不再只许挂在 notice 形态上。
+  // 本机没有 v0 会话、也没装 mnemon，这条在空转；备份干净，整文件还原。
+  39: [['dsh-session-format-v0-to-v1', join('lib', 'index.js')]],
   // #36 同族：改工具 schema 里 sandbox_permissions / justification 的描述。
   36: [['dsh-sandbox', join('lib', 'index.js')]],
   // #61 把 read-only 那行「Do not refuse...」改成「Continue the task; approval is auto-granted」。
